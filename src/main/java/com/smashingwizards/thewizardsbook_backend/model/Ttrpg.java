@@ -20,14 +20,6 @@ public class Ttrpg {
     @Column(name = "ttrpg_version", columnDefinition = "TEXT")
     private String version;
 
-    // ADDs
-    // avoid serializing items directly (use DTOs) or annotate with @JsonIgnore
-    @OneToMany(mappedBy = "ttrpg", orphanRemoval = false)
-    private List<Item> items = new ArrayList<>();
-
-    @OneToMany(mappedBy = "ttrpg", orphanRemoval = false)
-    private List<Item> spells = new ArrayList<>();
-
     // CONs
     public Ttrpg() {
     }
@@ -58,22 +50,6 @@ public class Ttrpg {
         this.version = version;
     }
 
-    // ADDs
-
-    public List<Item> getItems() {
-        return items;
-    }
-    public void setItems(List<Item> items) {
-        this.items = items;
-    }
-
-    public List<Item> getSpells() {
-        return spells;
-    }
-    public void setSpells(List<Item> spells) {
-        this.spells = spells;
-    }
-
     // OVRs
     @Override
     public String toString() {
@@ -81,8 +57,6 @@ public class Ttrpg {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", version='" + version + '\'' +
-                ", items=" + items +
-                ", spells=" + spells +
                 '}';
     }
 }

@@ -42,11 +42,6 @@ public class Spell {
     @Column(name = "spell_source_id")
     private Long sourceId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "spell_ttrpg", nullable = false)
-    private Ttrpg ttrpg;
-
-
     @OneToMany(mappedBy = "spell", cascade = CascadeType.ALL, orphanRemoval = true)
     List<SpellTag> spellTags = new ArrayList<>();
     @OneToMany(mappedBy = "spell", cascade = CascadeType.ALL, orphanRemoval = true)
