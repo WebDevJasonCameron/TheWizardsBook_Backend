@@ -1,7 +1,7 @@
 package com.smashingwizards.thewizardsbook_backend.mapper;
 
-import com.smashingwizards.thewizardsbag_backend.dto.SpellTagDTO;
-import com.smashingwizards.thewizardsbag_backend.model.SpellTag;
+import com.smashingwizards.thewizardsbook_backend.dto.SpellTagDTO;
+import com.smashingwizards.thewizardsbook_backend.model.SpellTag;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

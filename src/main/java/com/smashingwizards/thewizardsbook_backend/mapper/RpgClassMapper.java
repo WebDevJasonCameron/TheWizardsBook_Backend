@@ -1,7 +1,7 @@
 package com.smashingwizards.thewizardsbook_backend.mapper;
 
-import com.smashingwizards.thewizardsbag_backend.dto.RpgClassDTO;
-import com.smashingwizards.thewizardsbag_backend.model.RpgClass;
+import com.smashingwizards.thewizardsbook_backend.dto.RpgClassDTO;
+import com.smashingwizards.thewizardsbook_backend.model.RpgClass;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

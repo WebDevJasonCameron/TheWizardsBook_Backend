@@ -1,7 +1,7 @@
 package com.smashingwizards.thewizardsbook_backend.mapper;
 
-import com.smashingwizards.thewizardsbag_backend.dto.SpellConditionDTO;
-import com.smashingwizards.thewizardsbag_backend.model.SpellCondition;
+import com.smashingwizards.thewizardsbook_backend.dto.SpellConditionDTO;
+import com.smashingwizards.thewizardsbook_backend.model.SpellCondition;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
