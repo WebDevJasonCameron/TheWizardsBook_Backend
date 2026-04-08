@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public interface SpellDamagetypeService {
     List<SpellDamagetypeDTO> getSpellDamagetypes();
     SpellDamagetypeDTO getSpellDamagetypeById(Long id);

@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public interface TtrpgService {
     List<TtrpgDTO> getTtrpgs();
     TtrpgDTO getTtrpgById(Long id);

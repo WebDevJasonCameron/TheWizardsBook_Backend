@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public interface SpellConditionService {
     List<SpellConditionDTO> getSpellConditions();
     SpellConditionDTO getSpellConditionById(Long id);

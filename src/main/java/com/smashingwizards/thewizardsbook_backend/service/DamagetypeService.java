@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public interface DamagetypeService {
     List<DamagetypeDTO> getDamagetypes();
     DamagetypeDTO getDamagetypeById(Long id);

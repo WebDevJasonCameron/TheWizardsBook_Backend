@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public interface SpellTagService {
     List<SpellTagDTO> getSpellTags();
     SpellTagDTO getSpellTagById(Long id);

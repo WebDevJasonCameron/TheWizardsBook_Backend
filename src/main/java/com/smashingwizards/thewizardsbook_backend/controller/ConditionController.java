@@ -5,6 +5,7 @@ import com.smashingwizards.thewizardsbook_backend.dto.ConditionDTO;
 import com.smashingwizards.thewizardsbook_backend.service.ConditionService;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
 
 @RestController
