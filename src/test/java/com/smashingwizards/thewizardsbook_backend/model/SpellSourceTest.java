@@ -17,6 +17,7 @@ public class SpellSourceTest {
         assertNull(spellSource.getId());
         assertNull(spellSource.getSource());
         assertNull(spellSource.getSpell());
+        assertNull(spellSource.getPage());
     }
 
     @Test
@@ -30,6 +31,7 @@ public class SpellSourceTest {
         assertNull(spellSource.getId());
         assertSame(source, spellSource.getSource());
         assertSame(spell, spellSource.getSpell());
+        assertNull(spellSource.getPage());
     }
 
     @Test
@@ -39,6 +41,7 @@ public class SpellSourceTest {
 
         SpellSource spellSource = new SpellSource(spell, source);
         spellSource.setId(1L);
+        spellSource.setPage("111");
 
         String result = spellSource.toString();
 
@@ -46,5 +49,6 @@ public class SpellSourceTest {
         assertTrue(result.contains("id=1"));
         assertTrue(result.contains("spell="));
         assertTrue(result.contains("source="));
+        assertTrue(result.contains("page=111"));
     }
 }

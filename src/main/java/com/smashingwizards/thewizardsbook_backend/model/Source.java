@@ -18,7 +18,7 @@ public class Source {
 
     @Getter @Setter
     @Column(name = "source_publish_date")
-    private String publishData;
+    private String publishDate;
 
     @Getter @Setter
     @Column(name = "source_publisher")
@@ -30,9 +30,9 @@ public class Source {
 
     // CONs
     public Source() {}
-    public Source(String name, String publishData, String publisher, Long ttrpg) {
+    public Source(String name, String publishDate, String publisher, Long ttrpg) {
         this.name = name;
-        this.publishData = publishData;
+        this.publishDate = publishDate;
         this.publisher = publisher;
         this.ttrpg = ttrpg;
     }
@@ -43,7 +43,7 @@ public class Source {
         return "Source{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", publishData='" + publishData + '\'' +
+                ", publishDate='" + publishDate + '\'' +
                 ", publisher='" + publisher + '\'' +
                 ", ttrpg=" + ttrpg +
                 '}';

@@ -30,7 +30,7 @@ public class Effect {
     // OVRs
     @Override
     public String toString() {
-        return "Effect{" +
+        return "EffectRepository{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", subEffect='" + subEffect + '\'' +

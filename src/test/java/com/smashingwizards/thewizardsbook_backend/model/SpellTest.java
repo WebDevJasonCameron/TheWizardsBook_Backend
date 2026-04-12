@@ -33,7 +33,7 @@ public class SpellTest {
     void constructor_setsAllFields() {
         Spell spell = new Spell(
                 "Fireball",
-                1,
+                "1",
                 "1 action",
                 "self",
                 true,
@@ -49,7 +49,7 @@ public class SpellTest {
 
         assertNull(spell.getId());
         assertEquals("Fireball", spell.getName());
-        assertEquals(1, spell.getLevel());
+        assertEquals("1", spell.getLevel());
         assertEquals("1 action", spell.getCastingTime());
         assertEquals("self", spell.getRangeArea());
         assertTrue(spell.getComponentVisual());
@@ -70,7 +70,7 @@ public class SpellTest {
 
         assertEquals(1L, spell.getId());
         assertEquals("Fireball", spell.getName());
-        assertEquals(1, spell.getLevel());
+        assertEquals("1", spell.getLevel());
         assertEquals("1 action", spell.getCastingTime());
         assertEquals("60 feet", spell.getRangeArea());
         assertTrue(spell.getComponentVisual());
@@ -90,7 +90,7 @@ public class SpellTest {
 
         spell.setId(1L);
         spell.setName("Fireball");
-        spell.setLevel(1);
+        spell.setLevel("1");
         spell.setCastingTime("1 action");
         spell.setRangeArea("60 feet");
         spell.setComponentVisual(true);
@@ -110,7 +110,7 @@ public class SpellTest {
     void toString_containsFieldValues(){
         Spell spell = new Spell(
                 "Fireball",
-                1,
+                "1",
                 "1 action",
                 "self",
                 true,

@@ -14,7 +14,7 @@ public class SourceTest {
         assertNotNull(source);
         assertNull(source.getId());
         assertNull(source.getName());
-        assertNull(source.getPublishData());
+        assertNull(source.getPublishDate());
         assertNull(source.getPublisher());
     }
 
@@ -25,7 +25,7 @@ public class SourceTest {
         assertNotNull(source);
         assertNull(source.getId());
         assertEquals("The Wizards of the Coast", source.getName());
-        assertEquals("2019-01-01", source.getPublishData());
+        assertEquals("2019-01-01", source.getPublishDate());
         assertEquals("Wizards of the Coast", source.getPublisher());
         assertEquals(1L, source.getTtrpg());
     }
@@ -36,13 +36,13 @@ public class SourceTest {
 
         source.setId(1L);
         source.setName("The Wizards of the Coast");
-        source.setPublishData("2019-01-01");
+        source.setPublishDate("2019-01-01");
         source.setPublisher("Wizards of the Coast");
         source.setTtrpg(1L);
 
         assertEquals(1L, source.getId());
         assertEquals("The Wizards of the Coast", source.getName());
-        assertEquals("2019-01-01", source.getPublishData());
+        assertEquals("2019-01-01", source.getPublishDate());
         assertEquals("Wizards of the Coast", source.getPublisher());
         assertEquals(1L, source.getTtrpg());
     }

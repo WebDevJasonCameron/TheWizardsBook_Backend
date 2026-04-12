@@ -18,7 +18,7 @@ public class Spell {
 
     @Getter @Setter
     @Column(name = "spell_level")
-    private Integer level;
+    private String level;
 
     @Getter @Setter
     @Column(name = "spell_casting_time")
@@ -71,7 +71,7 @@ public class Spell {
     // CONs
     public Spell() {}
     public Spell(String name,
-                 Integer level,
+                 String level,
                  String castingTime,
                  String rangeArea,
                  Boolean componentVisual,

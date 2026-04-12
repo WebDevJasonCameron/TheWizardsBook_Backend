@@ -22,6 +22,10 @@ public class SpellSource {
     @JoinColumn(name = "sources_source_id", nullable = false)
     private Source source;
 
+    @Getter @Setter
+    @Column(name = "spell_source_page")
+    private String page;
+
     // CONs
     public SpellSource() {}
     public SpellSource(Spell spell, Source source) {
@@ -36,6 +40,7 @@ public class SpellSource {
                 "id=" + id +
                 ", spell=" + spell +
                 ", source=" + source +
+                ", page=" + page +
                 '}';
     }
 }
