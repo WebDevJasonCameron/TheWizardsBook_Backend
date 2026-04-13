@@ -25,13 +25,13 @@ public class SpellSourceTest {
         Spell spell = new Spell();
         Source source = new Source();
 
-        SpellSource spellSource = new SpellSource(spell, source);
+        SpellSource spellSource = new SpellSource(spell, source, "page");
 
         assertNotNull(spellSource);
         assertNull(spellSource.getId());
         assertSame(source, spellSource.getSource());
         assertSame(spell, spellSource.getSpell());
-        assertNull(spellSource.getPage());
+        assertEquals("page", spellSource.getPage());
     }
 
     @Test
@@ -39,7 +39,7 @@ public class SpellSourceTest {
         Spell spell = new Spell();
         Source source = new Source();
 
-        SpellSource spellSource = new SpellSource(spell, source);
+        SpellSource spellSource = new SpellSource(spell, source, "page");
         spellSource.setId(1L);
         spellSource.setPage("111");
 

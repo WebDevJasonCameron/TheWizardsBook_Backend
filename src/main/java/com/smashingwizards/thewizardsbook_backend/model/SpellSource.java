@@ -28,9 +28,10 @@ public class SpellSource {
 
     // CONs
     public SpellSource() {}
-    public SpellSource(Spell spell, Source source) {
+    public SpellSource(Spell spell, Source source, String page) {
         this.spell = spell;
         this.source = source;
+        this.page = page;
     }
 
     // OVRs
