@@ -1,32 +1,38 @@
 package com.smashingwizards.thewizardsbook_backend.dto;
 
-import com.smashingwizards.thewizardsbook_backend.model.Damagetype;
 import lombok.Getter;
 import lombok.Setter;
 
-public class DamagetypeDTO {
+public class EffectDTO {
 
     @Getter @Setter
     private Long id;
+
     @Getter @Setter
     private String name;
 
+    @Getter @Setter
+    private String subEffect;
+
     // CONs
-    public DamagetypeDTO(){}
-    public DamagetypeDTO(String name){
+    public EffectDTO() {}
+    public EffectDTO(String name, String subEffect) {
         this.name = name;
+        this.subEffect = subEffect;
     }
-    public DamagetypeDTO(Long id, String name){
+    public EffectDTO(Long id, String name, String subEffect) {
         this.id = id;
         this.name = name;
+        this.subEffect = subEffect;
     }
 
     // OVRs
     @Override
     public String toString() {
-        return "DamagetypeDTO{" +
+        return "EffectDTO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", subEffect='" + subEffect + '\'' +
                 '}';
     }
 }

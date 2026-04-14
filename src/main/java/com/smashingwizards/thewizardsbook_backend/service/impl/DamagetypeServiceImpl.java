@@ -25,7 +25,7 @@ public class DamagetypeServiceImpl implements DamagetypeService{
 
     // CRUDs
     @Override
-    public List<DamagetypeDTO> getDamagetypes() {
+    public List<DamagetypeDTO> getAllDamagetypes() {
         return damagetypeRepository.findAll().stream()
                 .map(damagetypeMapper::damagetypeToDamagetypeDTO)
                 .collect(Collectors.toList());
