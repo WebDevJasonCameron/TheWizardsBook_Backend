@@ -30,7 +30,7 @@ public class SpellImageUrlRepositoryTest {
     @Test
     @DisplayName("save() should persist a SpellImageUrl")
     void save_shouldPersistSpellImageUrl() {
-        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description", 1L);
+        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description");
         ImageUrl imageUrl = new ImageUrl("url", "type", "1234hash", null);
 
         Spell savedSpell = spellRepository.save(spell);
@@ -48,7 +48,7 @@ public class SpellImageUrlRepositoryTest {
     @Test
     @DisplayName("findById() should return saved SpellImageUrl")
     void findById_shouldReturnSavedSpellImageUrl(){
-        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description", 1L);
+        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description");
         ImageUrl imageUrl = new ImageUrl("url", "type", "1234hash", null);
 
         Spell savedSpell = spellRepository.save(spell);
@@ -66,7 +66,7 @@ public class SpellImageUrlRepositoryTest {
     @Test
     @DisplayName("findAll() should return all saved types")
     void findAll_shouldReturnAllSavedTypes() {
-        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description", 1L);
+        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description");
         ImageUrl imageUrl = new ImageUrl("url", "type", "1234hash", null);
 
         Spell savedSpell_1 = spellRepository.save(spell);
@@ -89,7 +89,7 @@ public class SpellImageUrlRepositoryTest {
     @Test
     @DisplayName("deleteById() should remove SpellImageUrl")
     void deleteById_shouldRemoveSpellImageUrl() {
-        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description", 1L);
+        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description");
         ImageUrl imageUrl = new ImageUrl("url", "type", "1234hash", null);
 
         Spell savedSpell = spellRepository.save(spell);

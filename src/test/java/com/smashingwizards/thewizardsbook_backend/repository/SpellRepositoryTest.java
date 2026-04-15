@@ -26,7 +26,7 @@ public class SpellRepositoryTest {
     @Test
     @DisplayName("save() should persist a Spell")
     void save_shouldPersistSpell() {
-        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description", 1L);
+        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description");
         Spell saved = underTest.save(spell);
 
         assertNotNull(saved);
@@ -44,13 +44,12 @@ public class SpellRepositoryTest {
         assertFalse(saved.getRitual());
         assertEquals("school", saved.getSchool());
         assertEquals("description", saved.getDescription());
-        assertEquals(1L, saved.getSourceId());
     }
 
     @Test
     @DisplayName("findById() should return saved Spell")
     void findById_shouldReturnSavedSpell() {
-        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description", 1L);
+        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description");
         Spell saved = underTest.save(spell);
 
         Optional<Spell> result = underTest.findById(saved.getId());
@@ -70,14 +69,13 @@ public class SpellRepositoryTest {
         assertFalse(saved.getRitual());
         assertEquals("school", saved.getSchool());
         assertEquals("description", saved.getDescription());
-        assertEquals(1L, saved.getSourceId());
     }
 
     @Test
     @DisplayName("findAll() should return all saved Spells")
     void findAll_shouldReturnAllSavedSpells() {
-        underTest.save(new Spell("name1", "level1", "casting time1", "range1", false, false, false, "", "duration1", false, false, "school1", "description1", 1L));
-        underTest.save(new Spell("name2", "level2", "casting time2", "range2", false, false, false, "", "duration2", false, false, "school2", "description2", 2L));
+        underTest.save(new Spell("name1", "level1", "casting time1", "range1", false, false, false, "", "duration1", false, false, "school1", "description1"));
+        underTest.save(new Spell("name2", "level2", "casting time2", "range2", false, false, false, "", "duration2", false, false, "school2", "description2"));
 
         List<Spell> results = underTest.findAll();
 
@@ -87,7 +85,7 @@ public class SpellRepositoryTest {
     @Test
     @DisplayName("deleteById() should remove Spell")
     void deleteById_shouldRemoveSpell() {
-        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description", 1L);
+        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description");
         Spell saved = underTest.save(spell);
 
         underTest.deleteById(saved.getId());

@@ -24,7 +24,7 @@ public class SourceRepositoryTest {
     @Test
     @DisplayName("save() should persist a condition")
     void save_shouldPersistCondition() {
-        Source source = new Source("source name", "publish date", "source publisher", 1L);
+        Source source = new Source("source name", "publish date", "source publisher");
         Source saved = underTest.save(source);
 
         assertNotNull(saved);
@@ -36,7 +36,7 @@ public class SourceRepositoryTest {
     @Test
     @DisplayName("findById() should return saved source")
     void findById_shouldReturnSavedSource() {
-        Source source = new Source("source name", "publish date", "source publisher", 1L);
+        Source source = new Source("source name", "publish date", "source publisher");
         Source saved = underTest.save(source);
 
         Optional<Source> result = underTest.findById(saved.getId());
@@ -50,7 +50,7 @@ public class SourceRepositoryTest {
     @Test
     @DisplayName("findAll() should return all saved sources")
     void findAll_shouldReturnAllSavedSources() {
-        underTest.save(new Source("source name", "publish date", "source publisher", 1L));
+        underTest.save(new Source("source name", "publish date", "source publisher"));
 
         List<Source> results = underTest.findAll();
 
@@ -61,7 +61,7 @@ public class SourceRepositoryTest {
     @Test
     @DisplayName("deleteById() should remove source")
     void deleteById_shouldRemoveSource() {
-        Source saved = underTest.save(new Source("source name", "publish date", "source publisher", 1L));
+        Source saved = underTest.save(new Source("source name", "publish date", "source publisher"));
 
         underTest.deleteById(saved.getId());
 

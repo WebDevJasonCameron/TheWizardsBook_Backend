@@ -26,7 +26,6 @@ public class SpellTest {
         assertNull(spell.getRitual());
         assertNull(spell.getSchool());
         assertNull(spell.getDescription());
-        assertNull(spell.getSourceId());
     }
 
     @Test
@@ -44,8 +43,7 @@ public class SpellTest {
                 false,
                 false,
                 "school",
-                "description",
-                5L);
+                "description");
 
         assertNull(spell.getId());
         assertEquals("Fireball", spell.getName());
@@ -61,7 +59,6 @@ public class SpellTest {
         assertFalse(spell.getRitual());
         assertEquals("school", spell.getSchool());
         assertEquals("description", spell.getDescription());
-        assertEquals(5L, spell.getSourceId());
     }
 
     @Test
@@ -82,7 +79,6 @@ public class SpellTest {
         assertTrue(spell.getRitual());
         assertEquals("Evocation", spell.getSchool());
         assertEquals("A fireball streaks toward a creature within range.", spell.getDescription());
-        assertEquals(1L, spell.getSourceId());
     }
 
     private static @NonNull Spell getSpell() {
@@ -102,7 +98,6 @@ public class SpellTest {
         spell.setRitual(true);
         spell.setSchool("Evocation");
         spell.setDescription("A fireball streaks toward a creature within range.");
-        spell.setSourceId(1L);
         return spell;
     }
 
@@ -121,8 +116,7 @@ public class SpellTest {
                 false,
                 false,
                 "school",
-                "description",
-                5L);
+                "description");
         spell.setId(2L);
 
         String result = spell.toString();
@@ -140,6 +134,5 @@ public class SpellTest {
         assertTrue(result.contains("false"));
         assertTrue(result.contains("school"));
         assertTrue(result.contains("description"));
-        assertTrue(result.contains("5"));
     }
 }

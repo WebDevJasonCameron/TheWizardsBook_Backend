@@ -20,14 +20,13 @@ public class SourceTest {
 
     @Test
     void constructor_setName_publishDate_publisher_ttrpg(){
-        Source source = new Source("The Wizards of the Coast", "2019-01-01", "Wizards of the Coast", 1L);
+        Source source = new Source("The Wizards of the Coast", "2019-01-01", "Wizards of the Coast");
 
         assertNotNull(source);
         assertNull(source.getId());
         assertEquals("The Wizards of the Coast", source.getName());
         assertEquals("2019-01-01", source.getPublishDate());
         assertEquals("Wizards of the Coast", source.getPublisher());
-        assertEquals(1L, source.getTtrpg());
     }
 
     @Test
@@ -38,18 +37,16 @@ public class SourceTest {
         source.setName("The Wizards of the Coast");
         source.setPublishDate("2019-01-01");
         source.setPublisher("Wizards of the Coast");
-        source.setTtrpg(1L);
 
         assertEquals(1L, source.getId());
         assertEquals("The Wizards of the Coast", source.getName());
         assertEquals("2019-01-01", source.getPublishDate());
         assertEquals("Wizards of the Coast", source.getPublisher());
-        assertEquals(1L, source.getTtrpg());
     }
 
     @Test
     void toString_containsFieldValues() {
-        Source source = new Source("The Wizards of the Coast", "2019-01-01", "Wizards of the Coast", 1L);
+        Source source = new Source("The Wizards of the Coast", "2019-01-01", "Wizards of the Coast");
         source.setId(2L);
 
         String result = source.toString();
@@ -57,6 +54,5 @@ public class SourceTest {
         assertTrue(result.contains("The Wizards of the Coast"));
         assertTrue(result.contains("2019-01-01"));
         assertTrue(result.contains("Wizards of the Coast"));
-        assertTrue(result.contains("1"));
     }
 }

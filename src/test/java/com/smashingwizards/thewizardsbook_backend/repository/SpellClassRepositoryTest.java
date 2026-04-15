@@ -30,7 +30,7 @@ public class SpellClassRepositoryTest {
     @Test
     @DisplayName("save() should persist a SpellClass")
     void save_shouldPersistSpellClass() {
-        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description", 1L);
+        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description");
         RpgClass rpgClass = new RpgClass("class name", "subclass name", "description");
 
         Spell savedSpell = spellRepository.save(spell);
@@ -48,7 +48,7 @@ public class SpellClassRepositoryTest {
     @Test
     @DisplayName("findById() should return saved SpellClass")
     void findById_shouldReturnSavedSpellClass() {
-        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description", 1L);
+        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description");
         RpgClass rpgClass = new RpgClass("class name", "subclass name", "description");
 
         Spell savedSpell = spellRepository.save(spell);
@@ -66,7 +66,7 @@ public class SpellClassRepositoryTest {
     @Test
     @DisplayName("findAll() should return all saved types")
     void findAll_shouldReturnAllSavedTypes() {
-        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description", 1L);
+        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description");
         RpgClass rpgClass = new RpgClass("class name", "subclass name", "description");
 
         Spell savedSpell_1 = spellRepository.save(spell);
@@ -89,7 +89,7 @@ public class SpellClassRepositoryTest {
     @Test
     @DisplayName("deleteById() should remove SpellClass")
     void deleteById_shouldRemoveSpellClass() {
-        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description", 1L);
+        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description");
         RpgClass rpgClass = new RpgClass("class name", "subclass name", "description");
 
         Spell savedSpell = spellRepository.save(spell);

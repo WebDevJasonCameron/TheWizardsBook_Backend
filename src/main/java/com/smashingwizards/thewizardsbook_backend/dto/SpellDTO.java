@@ -1,84 +1,73 @@
-package com.smashingwizards.thewizardsbook_backend.model;
+package com.smashingwizards.thewizardsbook_backend.dto;
 
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
-@Table(name = "spells")
-public class Spell {
+public class SpellDTO {
 
-    @Id @Getter @Setter
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter @Setter
     private Long id;
 
     @Getter @Setter
-    @Column(name = "spell_name")
     private String name;
 
     @Getter @Setter
-    @Column(name = "spell_level")
     private String level;
 
     @Getter @Setter
-    @Column(name = "spell_casting_time")
     private String castingTime;
 
     @Getter @Setter
-    @Column(name = "spell_range_area")
     private String rangeArea;
 
     @Getter @Setter
-    @Column(name = "spell_component_visual", nullable = false)
-    private Boolean componentVisual;
+    private boolean componentVisual;
 
     @Getter @Setter
-    @Column(name = "spell_component_semantic", nullable = false)
-    private Boolean componentSemantic;
+    private boolean componentSemantic;
 
     @Getter @Setter
-    @Column(name = "spell_component_material", nullable = false)
-    private Boolean componentMaterial;
+    private boolean componentMaterial;
 
     @Getter @Setter
-    @Column(name = "spell_component_materials")
     private String componentMaterials;
 
     @Getter @Setter
-    @Column(name = "spell_duration", columnDefinition = "TEXT")
     private String duration;
 
     @Getter @Setter
-    @Column(name = "spell_concentration", nullable = false)
-    private Boolean concentration;
+    private boolean concentration;
 
     @Getter @Setter
-    @Column(name = "spell_ritual", nullable = false)
-    private Boolean ritual;
+    private boolean ritual;
 
     @Getter @Setter
-    @Column(name = "spell_school")
     private String school;
 
     @Getter @Setter
-    @Column(name = "spell_description")
     private String description;
 
+
     // CONs
-    public Spell() {}
-    public Spell(String name,
-                 String level,
-                 String castingTime,
-                 String rangeArea,
-                 Boolean componentVisual,
-                 Boolean componentSemantic,
-                 Boolean componentMaterial,
-                 String componentMaterials,
-                 String duration,
-                 Boolean concentration,
-                 Boolean ritual,
-                 String school,
-                 String description) {
+    public SpellDTO() {
+    }
+    public SpellDTO(String name, String level, String castingTime, String rangeArea, boolean componentVisual, boolean componentSemantic, boolean componentMaterial, String componentMaterials, String duration, boolean concentration, boolean ritual, String school, String description) {
+        this.name = name;
+        this.level = level;
+        this.castingTime = castingTime;
+        this.rangeArea = rangeArea;
+        this.componentVisual = componentVisual;
+        this.componentSemantic = componentSemantic;
+        this.componentMaterial = componentMaterial;
+        this.componentMaterials = componentMaterials;
+        this.duration = duration;
+        this.concentration = concentration;
+        this.ritual = ritual;
+        this.school = school;
+        this.description = description;
+    }
+    public SpellDTO(Long id, String name, Long ttrpgId, String level, String castingTime, String rangeArea, boolean componentVisual, boolean componentSemantic, boolean componentMaterial, String componentMaterials, String duration, boolean concentration, boolean ritual, String school, String description) {
+        this.id = id;
         this.name = name;
         this.level = level;
         this.castingTime = castingTime;
@@ -97,7 +86,7 @@ public class Spell {
     // OVRs
     @Override
     public String toString() {
-        return "Spell{" +
+        return "SpellDTO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", level='" + level + '\'' +

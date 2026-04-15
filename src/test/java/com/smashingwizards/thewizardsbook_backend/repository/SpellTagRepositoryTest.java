@@ -28,7 +28,7 @@ public class SpellTagRepositoryTest {
     @Test
     @DisplayName("save() should persist a SpellTag")
     void save_shouldPersistSpellTag() {
-        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description", 1L);
+        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description");
         Tag tag = new Tag("tag name", "tag type");
 
         Spell savedSpell = spellRepository.save(spell);
@@ -46,7 +46,7 @@ public class SpellTagRepositoryTest {
     @Test
     @DisplayName("findById() should return saved SpellTag")
     void findById_shouldReturnSavedSpellTag() {
-        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description", 1L);
+        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description");
         Tag tag = new Tag("tag name", "tag type");
 
         Spell savedSpell = spellRepository.save(spell);
@@ -63,7 +63,7 @@ public class SpellTagRepositoryTest {
     @Test
     @DisplayName("findAll() should return all saved tags")
     void findAll_shouldReturnAllSavedTypes() {
-        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description", 1L);
+        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description");
         Tag tag = new Tag("tag name", "tag type");
 
         Spell savedSpell_1 = spellRepository.save(spell);
@@ -87,7 +87,7 @@ public class SpellTagRepositoryTest {
     @Test
     @DisplayName("deleteById() should remove SpellTag")
     void deleteById_shouldRemoveSpellTag() {
-        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description", 1L);
+        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description");
         Tag tag = new Tag("tag name", "tag type");
 
         Spell savedSpell = spellRepository.save(spell);

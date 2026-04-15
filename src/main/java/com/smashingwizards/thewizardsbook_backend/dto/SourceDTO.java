@@ -1,32 +1,31 @@
-package com.smashingwizards.thewizardsbook_backend.model;
+package com.smashingwizards.thewizardsbook_backend.dto;
 
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
-@Table(name = "sources")
-public class Source {
+public class SourceDTO {
 
-    @Id @Getter @Setter
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter @Setter
     private Long id;
 
     @Getter @Setter
-    @Column(name = "source_name")
     private String name;
 
     @Getter @Setter
-    @Column(name = "source_publish_date")
     private String publishDate;
 
     @Getter @Setter
-    @Column(name = "source_publisher")
     private String publisher;
 
     // CONs
-    public Source() {}
-    public Source(String name, String publishDate, String publisher) {
+    public SourceDTO() {}
+    public SourceDTO(String name, String publishDate, String publisher) {
+        this.name = name;
+        this.publishDate = publishDate;
+        this.publisher = publisher;
+    }
+    public SourceDTO(Long id, String name, String publishDate, String publisher) {
+        this.id = id;
         this.name = name;
         this.publishDate = publishDate;
         this.publisher = publisher;
@@ -35,11 +34,12 @@ public class Source {
     // OVRs
     @Override
     public String toString() {
-        return "Source{" +
+        return "SourceDTO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", publishDate='" + publishDate + '\'' +
                 ", publisher='" + publisher + '\'' +
                 '}';
     }
+
 }

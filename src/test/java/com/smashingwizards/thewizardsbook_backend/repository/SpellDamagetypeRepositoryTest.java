@@ -30,7 +30,7 @@ public class SpellDamagetypeRepositoryTest {
     @Test
     @DisplayName("save() should persist a SpellDamagetype")
     void save_shouldPersistSpellDamagetype() {
-        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description", 1L);
+        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description");
         Damagetype damagetype = new Damagetype("type name");
 
         Spell savedSpell = spellRepository.save(spell);
@@ -48,7 +48,7 @@ public class SpellDamagetypeRepositoryTest {
     @Test
     @DisplayName("findBy() should return saved SpellDamagetype")
     void findById_shouldReturnSavedSpell() {
-        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description", 1L);
+        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description");
         Damagetype damagetype = new Damagetype("type name");
 
         Spell savedSpell = spellRepository.save(spell);
@@ -66,7 +66,7 @@ public class SpellDamagetypeRepositoryTest {
     @Test
     @DisplayName("findAll() should return all saved types")
     void findAll_shouldReturnAllSavedTypes() {
-        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description", 1L);
+        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description");
         Damagetype damagetype = new Damagetype("type name");
 
         Spell savedSpell_1 = spellRepository.save(spell);
@@ -89,7 +89,7 @@ public class SpellDamagetypeRepositoryTest {
     @Test
     @DisplayName("deleteById() should remove SpellDamagetype")
     void deleteById_shouldRemoveSpellDamagetype() {
-        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description", 1L);
+        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description");
         Damagetype damagetype = new Damagetype("type name");
 
         Spell savedSpell = spellRepository.save(spell);

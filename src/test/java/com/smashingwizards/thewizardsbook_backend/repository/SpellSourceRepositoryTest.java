@@ -30,8 +30,8 @@ public class SpellSourceRepositoryTest {
     @Test
     @DisplayName("save() should persist a SpellSource")
     void save_shouldPersistSpellSource() {
-        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description", 1L);
-        Source source = new Source("source name", "publish date", "source publisher", 1L);
+        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description");
+        Source source = new Source("source name", "publish date", "source publisher");
 
         Spell savedSpell = spellRepository.save(spell);
         Source savedSource = sourceRepository.save(source);
@@ -48,8 +48,8 @@ public class SpellSourceRepositoryTest {
     @Test
     @DisplayName("findAll() should return all saved types")
     void findAll_shouldReturnAllSavedTypes() {
-        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description", 1L);
-        Source source = new Source("source name", "publish date", "source publisher", 1L);
+        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description");
+        Source source = new Source("source name", "publish date", "source publisher");
 
         Spell savedSpell_1 = spellRepository.save(spell);
         Spell savedSpell_2 = spellRepository.save(spell);
@@ -72,8 +72,8 @@ public class SpellSourceRepositoryTest {
     @Test
     @DisplayName("deleteById() should remove SpellSource")
     void deleteById_shouldRemoveSpellSource() {
-        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description", 1L);
-        Source source = new Source("source name", "publish date", "source publisher", 1L);
+        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description");
+        Source source = new Source("source name", "publish date", "source publisher");
 
         Spell savedSpell = spellRepository.save(spell);
         Source savedSource = sourceRepository.save(source);
