@@ -9,9 +9,11 @@ import com.smashingwizards.thewizardsbook_backend.repository.DamagetypeRepositor
 import com.smashingwizards.thewizardsbook_backend.repository.SpellDamagetypeRepository;
 import com.smashingwizards.thewizardsbook_backend.repository.SpellRepository;
 import com.smashingwizards.thewizardsbook_backend.service.SpellDamagetypeService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class SpellDamagetypeServiceImpl implements SpellDamagetypeService {
 
     private final SpellDamagetypeRepository spellDamagetypeRepository;
