@@ -66,7 +66,7 @@ public class SpellDTO {
         this.school = school;
         this.description = description;
     }
-    public SpellDTO(Long id, String name, Long ttrpgId, String level, String castingTime, String rangeArea, boolean componentVisual, boolean componentSemantic, boolean componentMaterial, String componentMaterials, String duration, boolean concentration, boolean ritual, String school, String description) {
+    public SpellDTO(Long id, String name, String level, String castingTime, String rangeArea, boolean componentVisual, boolean componentSemantic, boolean componentMaterial, String componentMaterials, String duration, boolean concentration, boolean ritual, String school, String description) {
         this.id = id;
         this.name = name;
         this.level = level;

@@ -1,0 +1,15 @@
+package com.smashingwizards.thewizardsbook_backend.mapper;
+
+import com.smashingwizards.thewizardsbook_backend.dto.SpellDamagetypeDTO;
+import com.smashingwizards.thewizardsbook_backend.model.SpellDamagetype;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
+@Mapper(componentModel = "spring")
+public interface SpellDamagetypeMapper {
+
+    @Mapping(source = "spell.id", target = "spellId")
+    @Mapping(source = "damagetype.id", target = "damagetypeId")
+    SpellDamagetypeDTO spellDamagetypeToSpellDamagetypeDTO(SpellDamagetype spellDamagetype);
+    // no DTO->Entity here; resolve IDs in the service
+}

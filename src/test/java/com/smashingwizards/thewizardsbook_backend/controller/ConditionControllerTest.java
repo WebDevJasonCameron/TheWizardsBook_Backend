@@ -1,0 +1,116 @@
+package com.smashingwizards.thewizardsbook_backend.controller;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.smashingwizards.thewizardsbook_backend.dto.ConditionDTO;
+import com.smashingwizards.thewizardsbook_backend.service.ConditionService;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@Import(ObjectMapper.class)
+@WebMvcTest(ConditionController.class)
+class ConditionControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @MockitoBean
+    private ConditionService conditionService;
+
+    @Test
+    void getAllConditions_shouldReturnListOfConditions() throws Exception {
+        List<ConditionDTO> conditions = List.of(
+                new ConditionDTO(1L, "Test Name 1", "Test Description 1"),
+                new ConditionDTO(2L, "Test Name 2", "Test Description 2")
+        );
+
+        when(conditionService.getAllConditions()).thenReturn(conditions);
+
+        mockMvc.perform(get("/api/conditions"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].name").value("Test Name 1"))
+                .andExpect(jsonPath("$[0].description").value("Test Description 1"))
+                .andExpect(jsonPath("$[1].id").value(2))
+                .andExpect(jsonPath("$[1].name").value("Test Name 2"))
+                .andExpect(jsonPath("$[1].description").value("Test Description 2"));
+    }
+
+    @Test
+    void getConditionById_shouldReturnCondition() throws Exception {
+        ConditionDTO condition = new ConditionDTO(1L, "Test Name 1", "Test Description 1");
+
+        when(conditionService.getConditionById(1L)).thenReturn(condition);
+
+        mockMvc.perform(get("/api/conditions/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value("Test Name 1"))
+                .andExpect(jsonPath("$.description").value("Test Description 1"));
+    }
+
+    @Test
+    void createCondition_shouldReturnCreatedCondition() throws Exception {
+        ConditionDTO requestDto = new ConditionDTO(null, "Test Name 1", "Test Description 1");
+        ConditionDTO responseDto = new ConditionDTO(1L, "Test Name 1", "Test Description 1");
+
+        when(conditionService.createCondition(any(ConditionDTO.class))).thenReturn(responseDto);
+
+        mockMvc.perform(post("/api/conditions")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestDto)))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value("Test Name 1"))
+                .andExpect(jsonPath("$.description").value("Test Description 1"));
+    }
+
+    @Test
+    void updateCondition_shouldReturnUpdatedCondition() throws Exception {
+        ConditionDTO requestDto = new ConditionDTO(null, "Test Name 1", "Updated description");
+        ConditionDTO responseDto = new ConditionDTO(1L, "Test Name 1", "Updated description");
+
+        when(conditionService.updateCondition(eq(1L), any(ConditionDTO.class))).thenReturn(responseDto);
+
+        mockMvc.perform(put("/api/conditions/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestDto)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value("Test Name 1"))
+                .andExpect(jsonPath("$.description").value("Updated description"));
+    }
+
+    @Test
+    void deleteCondition_shouldReturnNoContent() throws Exception {
+        doNothing().when(conditionService).deleteCondition(1L);
+
+        mockMvc.perform(delete("/api/conditions/1"))
+                .andExpect(status().isNoContent());
+    }
+}

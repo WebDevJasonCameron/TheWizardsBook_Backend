@@ -1,0 +1,38 @@
+package com.smashingwizards.thewizardsbook_backend.dto;
+
+import lombok.Getter;
+import lombok.Setter;
+
+public class SpellImageUrlDTO {
+
+    @Getter @Setter
+    private Long id;
+
+    @Getter @Setter
+    private Long spellId;
+
+    @Getter @Setter
+    private Long imageUrlId;
+
+    // CONs
+    public SpellImageUrlDTO() {}
+    public SpellImageUrlDTO(Long spellId, Long imageUrlId) {
+        this.spellId = spellId;
+        this.imageUrlId = imageUrlId;
+    }
+    public SpellImageUrlDTO(Long id, Long spellId, Long imageUrlId) {
+        this.id = id;
+        this.spellId = spellId;
+        this.imageUrlId = imageUrlId;
+    }
+
+    // OVRs
+    @Override
+    public String toString() {
+        return "SpellImageUrlDTO{" +
+                "id=" + id +
+                ", spellId=" + spellId +
+                ", imageUrlId=" + imageUrlId +
+                '}';
+    }
+}
