@@ -1,12 +1,10 @@
 package com.smashingwizards.thewizardsbook_backend.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smashingwizards.thewizardsbook_backend.dto.ConditionDTO;
 import com.smashingwizards.thewizardsbook_backend.service.ConditionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,14 +23,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Import(ObjectMapper.class)
 @WebMvcTest(ConditionController.class)
 class ConditionControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @MockitoBean
     private ConditionService conditionService;
@@ -60,7 +55,7 @@ class ConditionControllerTest {
 
     @Test
     void getConditionById_shouldReturnCondition() throws Exception {
-        ConditionDTO condition = new ConditionDTO(1L, "Test Name 1", "Test Description 1");
+        ConditionDTO condition = new ConditionDTO(1L, "Test Name", "Test Description");
 
         when(conditionService.getConditionById(1L)).thenReturn(condition);
 
@@ -68,41 +63,49 @@ class ConditionControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.name").value("Test Name 1"))
-                .andExpect(jsonPath("$.description").value("Test Description 1"));
+                .andExpect(jsonPath("$.name").value("Test Name"))
+                .andExpect(jsonPath("$.description").value("Test Description"));
     }
 
     @Test
     void createCondition_shouldReturnCreatedCondition() throws Exception {
-        ConditionDTO requestDto = new ConditionDTO(null, "Test Name 1", "Test Description 1");
-        ConditionDTO responseDto = new ConditionDTO(1L, "Test Name 1", "Test Description 1");
+        ConditionDTO responseDto = new ConditionDTO(1L, "Test Name", "Test Description");
 
         when(conditionService.createCondition(any(ConditionDTO.class))).thenReturn(responseDto);
 
         mockMvc.perform(post("/api/conditions")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestDto)))
+                        .content("""
+                                {
+                                  "name": "Test Name",
+                                  "description": "Test Description"
+                                }
+                                """))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.name").value("Test Name 1"))
-                .andExpect(jsonPath("$.description").value("Test Description 1"));
+                .andExpect(jsonPath("$.name").value("Test Name"))
+                .andExpect(jsonPath("$.description").value("Test Description"));
     }
 
     @Test
     void updateCondition_shouldReturnUpdatedCondition() throws Exception {
-        ConditionDTO requestDto = new ConditionDTO(null, "Test Name 1", "Updated description");
-        ConditionDTO responseDto = new ConditionDTO(1L, "Test Name 1", "Updated description");
+        ConditionDTO responseDto = new ConditionDTO(1L, "Test Name", "Updated description");
 
         when(conditionService.updateCondition(eq(1L), any(ConditionDTO.class))).thenReturn(responseDto);
 
         mockMvc.perform(put("/api/conditions/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestDto)))
+                        .content("""
+                                {
+                                  "name": "Test Name",
+                                  "description": "Updated description"
+                                }
+                                """))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.name").value("Test Name 1"))
+                .andExpect(jsonPath("$.name").value("Test Name"))
                 .andExpect(jsonPath("$.description").value("Updated description"));
     }
 

@@ -1,14 +1,10 @@
 package com.smashingwizards.thewizardsbook_backend.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smashingwizards.thewizardsbook_backend.dto.ConditionDTO;
 import com.smashingwizards.thewizardsbook_backend.dto.DamagetypeDTO;
-import com.smashingwizards.thewizardsbook_backend.service.ConditionService;
 import com.smashingwizards.thewizardsbook_backend.service.DamagetypeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,14 +23,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Import(ObjectMapper.class)
-@WebMvcTest(ConditionController.class)
-public class DamagetypeControllerTest {
+@WebMvcTest(DamagetypeController.class)
+class DamagetypeControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @MockitoBean
     private DamagetypeService damagetypeService;
@@ -58,4 +51,62 @@ public class DamagetypeControllerTest {
                 .andExpect(jsonPath("$[1].name").value("Test Name 2"));
     }
 
+    @Test
+    void getDamagetypeById_shouldReturnDamagetype() throws Exception {
+        DamagetypeDTO damagetype = new DamagetypeDTO(1L, "Test Name 1");
+
+        when(damagetypeService.getDamagetypeById(1L)).thenReturn(damagetype);
+
+        mockMvc.perform(get("/api/damagetypes/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value("Test Name 1"));
+    }
+
+    @Test
+    void createDamagetype_shouldReturnCreatedDamagetype() throws Exception {
+        DamagetypeDTO responseDto = new DamagetypeDTO(1L, "Test Name 1");
+
+        when(damagetypeService.createDamagetype(any(DamagetypeDTO.class))).thenReturn(responseDto);
+
+        mockMvc.perform(post("/api/damagetypes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "name": "Test Name 1"
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value("Test Name 1"));
+    }
+
+    @Test
+    void updateDamagetype_shouldReturnUpdatedDamagetype() throws Exception {
+        DamagetypeDTO responseDto = new DamagetypeDTO(1L, "Updated Name");
+
+        when(damagetypeService.updateDamagetype(eq(1L), any(DamagetypeDTO.class))).thenReturn(responseDto);
+
+        mockMvc.perform(put("/api/damagetypes/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "name": "Updated Name"
+                                }
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value("Updated Name"));
+    }
+
+    @Test
+    void deleteDamagetype_shouldReturnNoContent() throws Exception {
+        doNothing().when(damagetypeService).deleteDamagetype(1L);
+
+        mockMvc.perform(delete("/api/damagetypes/1"))
+                .andExpect(status().isNoContent());
+    }
 }
