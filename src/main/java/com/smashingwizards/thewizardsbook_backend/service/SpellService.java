@@ -10,4 +10,7 @@ public interface SpellService {
     SpellDTO createSpell(SpellDTO spellDTO);
     SpellDTO updateSpell(Long id, SpellDTO spellDTO);
     void deleteSpell(Long id);
+
+    /** ADDs */
+    List<SpellDTO> getAllByNameContainingIgnoreCase(String name);
 }

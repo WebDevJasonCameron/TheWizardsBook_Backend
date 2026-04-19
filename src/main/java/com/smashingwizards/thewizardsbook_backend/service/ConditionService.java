@@ -10,4 +10,7 @@ public interface ConditionService {
     ConditionDTO createCondition(ConditionDTO conditionDTO);
     ConditionDTO updateCondition(Long id, ConditionDTO conditionDTO);
     void deleteCondition(Long id);
+
+    /** ADDs */
+    List<ConditionDTO> getAllByNameContainingIgnoreCase(String name);
 }

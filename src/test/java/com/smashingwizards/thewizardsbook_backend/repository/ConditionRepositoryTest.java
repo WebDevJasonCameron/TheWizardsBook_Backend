@@ -70,4 +70,23 @@ class ConditionRepositoryTest {
         Optional<Condition> result = underTest.findById(saved.getId());
         assertFalse(result.isPresent());
     }
+
+    /** ADDs */
+    @Test
+    @DisplayName("findAllByNameContainingIgnoreCase() should return matching conditions")
+    void findAllByNameContainingIgnoreCase_shouldReturnMatchingConditions() {
+        Condition condition1 = new Condition("Test Name 1", "Test Description 1");
+        Condition condition2 = new Condition("Test Name 2", "Test Description 2");
+        Condition condition3 = new Condition("Name 3", "Test Description 3");
+
+        underTest.save(condition1);
+        underTest.save(condition2);
+        underTest.save(condition3);
+
+        List<Condition> results = underTest.findAllByNameContainingIgnoreCase("test");
+
+        assertEquals(2, results.size());
+        assertTrue(results.stream().anyMatch(condition -> condition.getName().equals("Test Name 1")));
+        assertTrue(results.stream().anyMatch(condition -> condition.getName().equals("Test Name 2")));
+    }
 }

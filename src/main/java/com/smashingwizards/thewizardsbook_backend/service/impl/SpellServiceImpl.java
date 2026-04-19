@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SpellServiceImpl implements SpellService {
@@ -74,6 +75,15 @@ public class SpellServiceImpl implements SpellService {
     @Override
     public void deleteSpell(Long id) {
         spellRepository.deleteById(id);
+    }
+
+    /** ADDs */
+    @Override
+    public List<SpellDTO> getAllByNameContainingIgnoreCase(String name) {
+        return spellRepository.findAllByNameContainingIgnoreCase(name)
+                .stream()
+                .map(spellMapper::spellToSpellDTO)
+                .toList();
     }
 
 

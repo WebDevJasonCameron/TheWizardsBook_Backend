@@ -4,6 +4,7 @@ import com.smashingwizards.thewizardsbook_backend.dto.ConditionDTO;
 import com.smashingwizards.thewizardsbook_backend.mapper.ConditionMapper;
 import com.smashingwizards.thewizardsbook_backend.model.Condition;
 import com.smashingwizards.thewizardsbook_backend.repository.ConditionRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,8 +17,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ConditionServiceImplTest {
@@ -171,5 +171,37 @@ public class ConditionServiceImplTest {
         conditionService.deleteCondition(1L);
 
         Mockito.verify(conditionRepositoryMock).deleteById(1L);
+    }
+
+    /** ADDs */
+    @Test
+    @DisplayName("getAllByNameContainingIgnoreCase() should return matching ConditionDTOs")
+    void getAllByNameContainingIgnoreCase_shouldReturnMatchingConditionDTOs() {
+        ConditionRepository conditionRepository = mock(ConditionRepository.class);
+        ConditionMapper conditionMapper = mock(ConditionMapper.class);
+
+        conditionService = new ConditionServiceImpl(conditionRepository, conditionMapper);
+
+        Condition condition1 = new Condition("Test Name 1", "Test Description 1");
+        Condition condition2 = new Condition("Test Name 2", "Test Description 2");
+
+        ConditionDTO conditionDTO1 = new ConditionDTO(1L, "Test Name 1", "Test Description 1");
+        ConditionDTO conditionDTO2 = new ConditionDTO(2L, "Test Name 2", "Test Description 2");
+
+        when(conditionRepository.findAllByNameContainingIgnoreCase("Test"))
+                .thenReturn(List.of(condition1, condition2));
+        when(conditionMapper.conditionToConditionDTO(condition1)).thenReturn(conditionDTO1);
+        when(conditionMapper.conditionToConditionDTO(condition2)).thenReturn(conditionDTO2);
+
+        List<ConditionDTO> results = conditionService.getAllByNameContainingIgnoreCase("Test");
+
+        assertNotNull(results);
+        assertEquals(2, results.size());
+        assertEquals("Test Name 1", results.get(0).getName());
+        assertEquals("Test Name 2", results.get(1).getName());
+
+        verify(conditionRepository).findAllByNameContainingIgnoreCase("Test");
+        verify(conditionMapper).conditionToConditionDTO(condition1);
+        verify(conditionMapper).conditionToConditionDTO(condition2);
     }
 }

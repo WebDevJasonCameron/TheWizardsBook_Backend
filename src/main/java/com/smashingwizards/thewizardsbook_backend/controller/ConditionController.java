@@ -45,4 +45,10 @@ public class ConditionController {
         conditionService.deleteCondition(id);
         return ResponseEntity.noContent().build();
     }
+
+    /** ADDs */
+    @GetMapping("/search")
+    public ResponseEntity<List<ConditionDTO>> getAllByNameContainingIgnoreCase(@RequestParam String name) {
+        return ResponseEntity.ok(conditionService.getAllByNameContainingIgnoreCase(name));
+    }
 }

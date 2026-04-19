@@ -60,4 +60,13 @@ public class ConditionServiceImpl implements ConditionService {
     public void deleteCondition(Long id) {
         conditionRepository.deleteById(id);
     }
+
+    /** ADDs */
+    @Override
+    public List<ConditionDTO> getAllByNameContainingIgnoreCase(String name) {
+        return conditionRepository.findAllByNameContainingIgnoreCase(name)
+                .stream()
+                .map(conditionMapper::conditionToConditionDTO)
+                .toList();
+    }
 }

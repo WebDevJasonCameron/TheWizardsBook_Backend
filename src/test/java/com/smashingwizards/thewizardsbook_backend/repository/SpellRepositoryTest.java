@@ -1,5 +1,7 @@
 package com.smashingwizards.thewizardsbook_backend.repository;
 
+import com.smashingwizards.thewizardsbook_backend.dto.SpellDTO;
+import com.smashingwizards.thewizardsbook_backend.mapper.SpellMapper;
 import com.smashingwizards.thewizardsbook_backend.model.Spell;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @DataJpaTest
 public class SpellRepositoryTest {
@@ -92,5 +95,27 @@ public class SpellRepositoryTest {
 
         Optional<Spell> result = underTest.findById(saved.getId());
         assertFalse(result.isPresent());
+    }
+
+    /** ADDs */
+    @Test
+    @DisplayName("findAllByNameContainingIgnoreCase() should return matching spells")
+    void findAllByNameContainingIgnoreCase_shouldReturnMatchingSpells() {
+        Spell spell1 = new Spell("Test Name 1", "Test Level 1", "Test CastingTime 1", "Test RangeArea 1", false, false, false, "N/A", "Test Duration 1", false, false, "Test School 1", "Test Description 1");
+
+        Spell spell2 = new Spell("Test Name 2", "Test Level 2", "Test CastingTime 2", "Test RangeArea 2", false, false, false, "N/A", "Test Duration 2", false, false, "Test School 2", "Test Description 2");
+
+        Spell spell3 = new Spell("Name 3", "Test Level 3", "Test CastingTime 3", "Test RangeArea 3", false, false, false, "N/A", "Test Duration 3", false, false, "Test School 3", "Test Description 3");
+
+        underTest.save(spell1);
+        underTest.save(spell2);
+        underTest.save(spell3);
+
+        List<Spell> results = underTest.findAllByNameContainingIgnoreCase("test name");
+
+        assertEquals(2, results.size());
+        assertTrue(results.stream().anyMatch(spell -> spell.getName().equals("Test Name 1")));
+        assertTrue(results.stream().anyMatch(spell -> spell.getName().equals("Test Name 2")));
+
     }
 }

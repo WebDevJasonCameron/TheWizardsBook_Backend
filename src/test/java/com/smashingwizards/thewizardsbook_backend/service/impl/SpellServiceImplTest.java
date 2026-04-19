@@ -5,6 +5,7 @@ import com.smashingwizards.thewizardsbook_backend.mapper.SpellMapper;
 import com.smashingwizards.thewizardsbook_backend.model.Spell;
 import com.smashingwizards.thewizardsbook_backend.repository.SpellRepository;
 import org.jspecify.annotations.NonNull;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -144,8 +145,102 @@ public class SpellServiceImplTest {
         verify(spellRepositoryMock).deleteById(1L);
     }
 
+    /** ADDs */
+    @Test
+    @DisplayName("getAllByNameContainingIgnoreCase() should return matching SpellDTOs")
+    void getAllByNameContainingIgnoreCase_shouldReturnMatchingSpellDTOs() {
+        SpellRepository spellRepository = mock(SpellRepository.class);
+        SpellMapper spellMapper = mock(SpellMapper.class);
 
-    // SUPs
+        spellService = new SpellServiceImpl(spellRepository, spellMapper);
+
+        Spell spell1 = new Spell(
+                "Test Name 1",
+                "Test Level 1",
+                "Test CastingTime 1",
+                "Test RangeArea 1",
+                false,
+                false,
+                false,
+                "Test ComponentMaterials 1",
+                "Test Duration 1",
+                false,
+                false,
+                "Test School 1",
+                "Test Description 1"
+        );
+
+        Spell spell2 = new Spell(
+                "Test Name 2",
+                "Test Level 2",
+                "Test CastingTime 2",
+                "Test RangeArea 2",
+                false,
+                false,
+                false,
+                "Test ComponentMaterials 2",
+                "Test Duration 2",
+                false,
+                false,
+                "Test School 2",
+                "Test Description 2"
+        );
+
+        SpellDTO spellDto1 = new SpellDTO();
+        spellDto1.setId(1L);
+        spellDto1.setName("Test Name 1");
+        spellDto1.setLevel("Test Level 1");
+        spellDto1.setCastingTime("Test CastingTime 1");
+        spellDto1.setRangeArea("Test RangeArea 1");
+        spellDto1.setComponentVisual(false);
+        spellDto1.setComponentSemantic(false);
+        spellDto1.setComponentMaterial(false);
+        spellDto1.setComponentMaterials("Test ComponentMaterials 1");
+        spellDto1.setDuration("Test Duration 1");
+        spellDto1.setConcentration(false);
+        spellDto1.setRitual(false);
+        spellDto1.setSchool("Test School 1");
+        spellDto1.setDescription("Test Description 1");
+
+        SpellDTO spellDto2 = new SpellDTO();
+        spellDto2.setId(2L);
+        spellDto2.setName("Test Name 2");
+        spellDto2.setLevel("Test Level 2");
+        spellDto2.setCastingTime("Test CastingTime 2");
+        spellDto2.setRangeArea("Test RangeArea 2");
+        spellDto2.setComponentVisual(false);
+        spellDto2.setComponentSemantic(false);
+        spellDto2.setComponentMaterial(false);
+        spellDto2.setComponentMaterials("Test ComponentMaterials 2");
+        spellDto2.setDuration("Test Duration 2");
+        spellDto2.setConcentration(false);
+        spellDto2.setRitual(false);
+        spellDto2.setSchool("Test School 2");
+        spellDto2.setDescription("Test Description 2");
+
+        when(spellRepository.findAllByNameContainingIgnoreCase("Test"))
+                .thenReturn(List.of(spell1, spell2));
+
+        when(spellMapper.spellToSpellDTO(spell1)).thenReturn(spellDto1);
+        when(spellMapper.spellToSpellDTO(spell2)).thenReturn(spellDto2);
+
+        List<SpellDTO> results = spellService.getAllByNameContainingIgnoreCase("Test");
+
+        assertNotNull(results);
+        assertEquals(2, results.size());
+
+        assertEquals("Test Name 1", results.get(0).getName());
+        assertEquals("Test Level 1", results.get(0).getLevel());
+
+        assertEquals("Test Name 2", results.get(1).getName());
+        assertEquals("Test Level 2", results.get(1).getLevel());
+
+        verify(spellRepository).findAllByNameContainingIgnoreCase("Test");
+        verify(spellMapper).spellToSpellDTO(spell1);
+        verify(spellMapper).spellToSpellDTO(spell2);
+    }
+
+    /** SUPs */
     private static @NonNull Spell getSpell() {
         Spell spell = new Spell();
         spell.setId(1L);

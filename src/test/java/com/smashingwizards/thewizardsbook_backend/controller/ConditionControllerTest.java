@@ -2,6 +2,7 @@ package com.smashingwizards.thewizardsbook_backend.controller;
 
 import com.smashingwizards.thewizardsbook_backend.dto.ConditionDTO;
 import com.smashingwizards.thewizardsbook_backend.service.ConditionService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -13,8 +14,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -115,5 +115,29 @@ class ConditionControllerTest {
 
         mockMvc.perform(delete("/api/conditions/1"))
                 .andExpect(status().isNoContent());
+    }
+
+    /** ADDs */
+    @Test
+    @DisplayName("Get /api/conditions/search?name=test should return matching conditions")
+    void getConditionsByNameContainingIgnoreCase_shouldReturnMatchingConditions() throws Exception{
+        ConditionDTO conditionDto1 = new ConditionDTO(1L, "Test Name 1", "Test Description 1");
+        ConditionDTO conditionDto2 = new ConditionDTO(2L, "Test Name 2", "Test Description 2");
+        ConditionDTO conditionDto3 = new ConditionDTO(3L, "Name 3", "Test Description 3");
+
+        when(conditionService.getAllByNameContainingIgnoreCase("test")).thenReturn(List.of(conditionDto1, conditionDto2, conditionDto3));
+
+        mockMvc.perform(get("/api/conditions/search")
+                .param("name", "test"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].name").value("Test Name 1"))
+                .andExpect(jsonPath("$[0].description").value("Test Description 1"))
+                .andExpect(jsonPath("$[1].id").value(2))
+                .andExpect(jsonPath("$[1].name").value("Test Name 2"))
+                .andExpect(jsonPath("$[1].description").value("Test Description 2"));
+
+        verify(conditionService).getAllByNameContainingIgnoreCase(eq("test"));
     }
 }

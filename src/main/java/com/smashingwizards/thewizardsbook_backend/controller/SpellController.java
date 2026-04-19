@@ -45,4 +45,11 @@ public class SpellController {
         spellService.deleteSpell(id);
         return ResponseEntity.noContent().build();
     }
+
+    /** ADDs */
+
+    @GetMapping("/search")
+    public ResponseEntity<List<SpellDTO>> getAllSpellsByName(@RequestParam String name) {
+        return ResponseEntity.ok(spellService.getAllByNameContainingIgnoreCase(name));
+    }
 }
