@@ -68,4 +68,22 @@ public class DamagetypeRepositoryTest {
         Optional<Damagetype> result = underTest.findById(saved.getId());
         assertFalse(result.isPresent());
     }
+
+    /** ADDs */
+    @Test
+    @DisplayName("findAllByNameContainingIngoreCase() should return matching damagetypes")
+    void findAllByNameContainingIgnoreCase_shouldReturnMatchingDamagetypes() {
+        Damagetype damagetype1 = new Damagetype("Test Name 1");
+        Damagetype damagetype2 = new Damagetype("Test Name 2");
+        Damagetype damagetype3 = new Damagetype("Name 3");
+        underTest.save(damagetype1);
+        underTest.save(damagetype2);
+        underTest.save(damagetype3);
+
+        List<Damagetype> results = underTest.findAllByNameContainingIgnoreCase("Test");
+
+        assertEquals(2, results.size());
+        assertTrue(results.contains(damagetype1));
+        assertTrue(results.contains(damagetype2));
+    }
 }

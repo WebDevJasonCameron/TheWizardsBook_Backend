@@ -60,4 +60,14 @@ public class DamagetypeServiceImpl implements DamagetypeService{
     public void deleteDamagetype(Long id) {
         damagetypeRepository.deleteById(id);
     }
+
+    /** ADDs */
+
+    @Override
+    public List<DamagetypeDTO> getAllByNameContainingIgnoreCase(String name) {
+        return damagetypeRepository.findAllByNameContainingIgnoreCase(name)
+                .stream()
+                .map(damagetypeMapper::damagetypeToDamagetypeDTO)
+                .toList();
+    }
 }

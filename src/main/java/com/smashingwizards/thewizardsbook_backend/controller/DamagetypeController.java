@@ -45,4 +45,11 @@ public class DamagetypeController {
         damagetypeService.deleteDamagetype(id);
         return ResponseEntity.noContent().build();
     }
+
+    /** ADDs */
+
+    @GetMapping("/search")
+    public ResponseEntity<List<DamagetypeDTO>> searchByName(@RequestParam String name) {
+        return ResponseEntity.ok(damagetypeService.getAllByNameContainingIgnoreCase(name));
+    }
 }

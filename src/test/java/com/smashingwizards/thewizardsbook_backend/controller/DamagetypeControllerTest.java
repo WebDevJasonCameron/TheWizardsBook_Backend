@@ -2,6 +2,7 @@ package com.smashingwizards.thewizardsbook_backend.controller;
 
 import com.smashingwizards.thewizardsbook_backend.dto.DamagetypeDTO;
 import com.smashingwizards.thewizardsbook_backend.service.DamagetypeService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -13,8 +14,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -108,5 +108,26 @@ class DamagetypeControllerTest {
 
         mockMvc.perform(delete("/api/damagetypes/1"))
                 .andExpect(status().isNoContent());
+    }
+
+    /** ADDs */
+    @Test
+    @DisplayName("Get /api/damagetypes/search?name=test should return matching damagetypes")
+    void getDamagetypesByName_shouldReturnMatchingSpells() throws Exception{
+        DamagetypeDTO damagetypeDto1 = new DamagetypeDTO(1L, "Test Name 1");
+        DamagetypeDTO damagetypeDto2 = new DamagetypeDTO(2L, "Test Name 2");
+
+        when(damagetypeService.getAllByNameContainingIgnoreCase("test")).thenReturn(List.of(damagetypeDto1, damagetypeDto2));
+
+        mockMvc.perform(get("/api/damagetypes/search?name=test"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].name").value("Test Name 1"))
+                .andExpect(jsonPath("$[1].id").value(2))
+                .andExpect(jsonPath("$[1].name").value("Test Name 2"));
+
+        verify(damagetypeService).getAllByNameContainingIgnoreCase("test");
     }
 }

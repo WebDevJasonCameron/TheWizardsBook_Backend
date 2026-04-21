@@ -4,6 +4,7 @@ import com.smashingwizards.thewizardsbook_backend.dto.DamagetypeDTO;
 import com.smashingwizards.thewizardsbook_backend.mapper.DamagetypeMapper;
 import com.smashingwizards.thewizardsbook_backend.model.Damagetype;
 import com.smashingwizards.thewizardsbook_backend.repository.DamagetypeRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class DamagetypeServiceImplTest {
@@ -152,5 +153,37 @@ public class DamagetypeServiceImplTest {
         damagetypeService.deleteDamagetype(1L);
 
         Mockito.verify(damagetypeRepositoryMock).deleteById(1L);
+    }
+
+    /** ADDs */
+    @Test
+    @DisplayName("getAllByNameContainingIgnoreCase() should return matching Damagetypes")
+    void getAllByNameContainingIgnoreCase_shouldReturnMatchingDamagetypes() {
+        DamagetypeRepository damagetypeRepository = mock(DamagetypeRepository.class);
+        DamagetypeMapper damagetypeMapper = mock(DamagetypeMapper.class);
+
+        damagetypeService = new DamagetypeServiceImpl(damagetypeRepository, damagetypeMapper);
+
+        Damagetype damagetype1 = new Damagetype("Test Name 1");
+        Damagetype damagetype2 = new Damagetype("Test Name 2");
+
+        DamagetypeDTO dto1 = new DamagetypeDTO(1L, "Test Name 1");
+        DamagetypeDTO dto2 = new DamagetypeDTO(2L, "Test Name 2");
+
+        when(damagetypeRepository.findAllByNameContainingIgnoreCase("Test")).thenReturn(List.of(damagetype1, damagetype2));
+        when(damagetypeMapper.damagetypeToDamagetypeDTO(damagetype1)).thenReturn(dto1);
+        when(damagetypeMapper.damagetypeToDamagetypeDTO(damagetype2)).thenReturn(dto2);
+
+        List<DamagetypeDTO> result = damagetypeService.getAllByNameContainingIgnoreCase("Test");
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+
+        assertEquals("Test Name 1", result.get(0).getName());
+        assertEquals("Test Name 2", result.get(1).getName());
+
+        verify(damagetypeRepository).findAllByNameContainingIgnoreCase("Test");
+        verify(damagetypeMapper).damagetypeToDamagetypeDTO(damagetype1);
+        verify(damagetypeMapper).damagetypeToDamagetypeDTO(damagetype2);
     }
 }

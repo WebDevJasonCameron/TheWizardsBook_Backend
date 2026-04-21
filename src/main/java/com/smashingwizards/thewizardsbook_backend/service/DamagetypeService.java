@@ -10,4 +10,7 @@ public interface DamagetypeService {
     DamagetypeDTO createDamagetype(DamagetypeDTO dto);
     DamagetypeDTO updateDamagetype(Long id, DamagetypeDTO dto);
     void deleteDamagetype(Long id);
+
+    /** ADDs */
+    List<DamagetypeDTO> getAllByNameContainingIgnoreCase(String name);
 }
