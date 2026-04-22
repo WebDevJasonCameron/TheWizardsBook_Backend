@@ -10,4 +10,7 @@ public interface EffectService {
     EffectDTO createEffect(EffectDTO effectDTO);
     EffectDTO updateEffect(Long id, EffectDTO effectDTO);
     void deleteEffect(Long id);
+
+    /** ADDs */
+    List<EffectDTO> getAllByNameContainingIgnoreCase(String name);
 }

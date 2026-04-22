@@ -70,4 +70,23 @@ public class EffectRepositoryTest {
         assertFalse(result.isPresent());
     }
 
+    /** ADDs */
+    @Test
+    @DisplayName("findAllByNameContainingIgnoreCase() should return matching effects")
+    void findAllByNameContainingIgnoreCase_shouldReturnMatchingEffects() {
+        Effect effect1 = new Effect("Test Name 1", "Test SubEffect 1");
+        Effect effect2 = new Effect("Test Name 2", "Test SubEffect 2");
+        Effect effect3 = new Effect("Name 3", "Test SubEffect 3");
+
+        underTest.save(effect1);
+        underTest.save(effect2);
+        underTest.save(effect3);
+
+        List<Effect> results = underTest.findAllByNameContainingIgnoreCase("Test");
+
+        assertEquals(2, results.size());
+        assertTrue(results.stream().anyMatch(effect -> effect.getName().equals("Test Name 1")));
+        assertTrue(results.stream().anyMatch(effect -> effect.getName().equals("Test Name 2")));
+    }
+
 }

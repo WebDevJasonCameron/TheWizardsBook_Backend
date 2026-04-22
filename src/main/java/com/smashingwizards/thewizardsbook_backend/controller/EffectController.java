@@ -45,4 +45,10 @@ public class EffectController {
         effectService.deleteEffect(id);
         return ResponseEntity.noContent().build();
     }
+
+    /** ADDs */
+    @GetMapping("/search")
+    public ResponseEntity<List<EffectDTO>> getAllByNameContainingIgnoreCase(@RequestParam String name) {
+        return ResponseEntity.ok(effectService.getAllByNameContainingIgnoreCase(name));
+    }
 }

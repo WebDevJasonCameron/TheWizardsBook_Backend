@@ -2,6 +2,7 @@ package com.smashingwizards.thewizardsbook_backend.controller;
 
 import com.smashingwizards.thewizardsbook_backend.dto.EffectDTO;
 import com.smashingwizards.thewizardsbook_backend.service.EffectService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -15,8 +16,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -116,5 +116,29 @@ public class EffectControllerTest {
 
         mockMvc.perform(delete("/api/effects/1"))
                 .andExpect(status().isNoContent());
+    }
+
+    /** ADDs */
+    @Test
+    @DisplayName("GET /api/effects/search?name=test should return matching effects")
+    void getEffectByName_shouldReturnMatchingEffects() throws Exception {
+        EffectDTO effectDto1 = new EffectDTO(1L, "Test Name 1", "Test subEffect 1");
+        EffectDTO effectDto2 = new EffectDTO(2L, "Test Name 2", "Test subEffect 2");
+
+        when(effectService.getAllByNameContainingIgnoreCase(eq("test"))).thenReturn(List.of(effectDto1, effectDto2));
+
+        mockMvc.perform(get("/api/effects/search")
+                .param("name", "test"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].name").value("Test Name 1"))
+                .andExpect(jsonPath("$[0].subEffect").value("Test subEffect 1"))
+                .andExpect(jsonPath("$[1].id").value(2))
+                .andExpect(jsonPath("$[1].name").value("Test Name 2"))
+                .andExpect(jsonPath("$[1].subEffect").value("Test subEffect 2"));
+
+        verify(effectService).getAllByNameContainingIgnoreCase(eq("test"));
     }
 }

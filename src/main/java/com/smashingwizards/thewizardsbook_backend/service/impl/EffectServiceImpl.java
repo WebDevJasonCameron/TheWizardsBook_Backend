@@ -62,4 +62,13 @@ public class EffectServiceImpl implements EffectService {
     public void deleteEffect(Long id) {
         effectRepository.deleteById(id);
     }
+
+    /** ADDs */
+    @Override
+    public List<EffectDTO> getAllByNameContainingIgnoreCase(String name) {
+        return effectRepository.findAllByNameContainingIgnoreCase(name)
+                .stream()
+                .map(effectMapper::effectToEffectDTO)
+                .collect(Collectors.toList());
+    }
 }

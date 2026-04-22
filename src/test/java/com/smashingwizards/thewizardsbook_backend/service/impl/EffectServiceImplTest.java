@@ -4,6 +4,7 @@ import com.smashingwizards.thewizardsbook_backend.dto.EffectDTO;
 import com.smashingwizards.thewizardsbook_backend.mapper.EffectMapper;
 import com.smashingwizards.thewizardsbook_backend.model.Effect;
 import com.smashingwizards.thewizardsbook_backend.repository.EffectRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,8 +17,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class EffectServiceImplTest {
@@ -165,6 +165,36 @@ public class EffectServiceImplTest {
         effectService.deleteEffect(1L);
 
         Mockito.verify(effectRepositoryMock).deleteById(1L);
+    }
+
+    /** ADDs */
+    @Test
+    @DisplayName("getAllByNameContainingIgnoreCase() should return matching EffectDTO")
+    void getAllByNameContainingIgnoreCase_shouldReturnMatchingEffectDTOs(){
+        EffectRepository effectRepository = mock(EffectRepository.class);
+        EffectMapper effectMapper = mock(EffectMapper.class);
+
+        effectService = new EffectServiceImpl(effectRepository, effectMapper);
+
+        Effect effect1 = new Effect("Test Name 1", "Test SubEffect 1");
+        Effect effect2 = new Effect("Test Name 2", "Test SubEffect 2");
+
+        EffectDTO effectDTO1 = new EffectDTO(1L, "Test Name 1", "Test SubEffect 1");
+        EffectDTO effectDTO2 = new EffectDTO(2L, "Test Name 2", "Test SubEffect 2");
+
+        when(effectRepository.findAllByNameContainingIgnoreCase("Test")).thenReturn(List.of(effect1, effect2));
+        when(effectMapper.effectToEffectDTO(effect1)).thenReturn(effectDTO1);
+        when(effectMapper.effectToEffectDTO(effect2)).thenReturn(effectDTO2);
+
+        List<EffectDTO> result = effectService.getAllByNameContainingIgnoreCase("Test");
+
+        assertEquals(2, result.size());
+        assertEquals(effectDTO1, result.get(0));
+        assertEquals(effectDTO2, result.get(1));
+
+        verify(effectRepository).findAllByNameContainingIgnoreCase("Test");
+        verify(effectMapper).effectToEffectDTO(effect1);
+        verify(effectMapper).effectToEffectDTO(effect2);
     }
 
 }
