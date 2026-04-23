@@ -63,4 +63,13 @@ public class RpgClassServiceImpl implements RpgClassService {
         rpgClassRepository.deleteById(id);
     }
 
+    /** ADDs */
+    @Override
+    public List<RpgClassDTO> getAllByNameContainingIgnoreCase(String name) {
+        return rpgClassRepository.findAllByNameContainingIgnoreCase(name)
+                .stream()
+                .map(rpgClassMapper::rpgClassToRpgClassDTO)
+                .collect(java.util.stream.Collectors.toList());
+    }
+
 }

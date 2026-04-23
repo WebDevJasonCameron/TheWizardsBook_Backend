@@ -45,4 +45,10 @@ public class RpgClassController {
         rpgClassService.deleteRpgClass(id);
         return ResponseEntity.noContent().build();
     }
+
+    /** ADDs */
+    @GetMapping("/search")
+    public ResponseEntity<List<RpgClassDTO>> getAllByNameContainingIgnoreCase(@RequestParam String name) {
+        return ResponseEntity.ok(rpgClassService.getAllByNameContainingIgnoreCase(name));
+    }
 }

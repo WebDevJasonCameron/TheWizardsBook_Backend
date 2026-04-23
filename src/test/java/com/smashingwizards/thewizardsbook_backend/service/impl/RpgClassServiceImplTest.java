@@ -4,6 +4,7 @@ import com.smashingwizards.thewizardsbook_backend.dto.RpgClassDTO;
 import com.smashingwizards.thewizardsbook_backend.mapper.RpgClassMapper;
 import com.smashingwizards.thewizardsbook_backend.model.RpgClass;
 import com.smashingwizards.thewizardsbook_backend.repository.RpgClassRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,8 +16,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class RpgClassServiceImplTest {
@@ -177,5 +178,37 @@ public class RpgClassServiceImplTest {
         rpgClassService.deleteRpgClass(1L);
 
         Mockito.verify(rpgClassRepositoryMock).deleteById(1L);
+    }
+
+    /** ADDs */
+    @Test
+    @DisplayName("getAllByNameContainingIgnoreCase() should return matching RpgClassDTOs")
+    void getAllByNameContainingIgnoreCase_shouldReturnMatchingRpgClassDTOs(){
+        RpgClassRepository rpgClassRepository = mock(RpgClassRepository.class);
+        RpgClassMapper rpgClassMapper = mock(RpgClassMapper.class);
+
+        rpgClassService = new RpgClassServiceImpl(rpgClassRepository, rpgClassMapper);
+
+        RpgClass rpgClass1 = new RpgClass("Test Name 1", "subclass name 1", "description 1");
+        RpgClass rpgClass2 = new RpgClass("Test Name 2", "subclass name 2", "description 2");
+
+        RpgClassDTO rpgClassDTO1 = new RpgClassDTO(1L, "Test Name 1", "subclass name 1", "description 1");
+        RpgClassDTO rpgClassDTO2 = new RpgClassDTO(2L, "Test Name 2", "subclass name 2", "description 2");
+
+        when(rpgClassRepository.findAllByNameContainingIgnoreCase("name")).thenReturn(List.of(rpgClass1, rpgClass2));
+        when(rpgClassMapper.rpgClassToRpgClassDTO(rpgClass1)).thenReturn(rpgClassDTO1);
+        when(rpgClassMapper.rpgClassToRpgClassDTO(rpgClass2)).thenReturn(rpgClassDTO2);
+
+        List<RpgClassDTO> result = rpgClassService.getAllByNameContainingIgnoreCase("name");
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+
+        assertEquals("Test Name 1", result.get(0).getName());
+        assertEquals("Test Name 2", result.get(1).getName());
+
+        verify(rpgClassRepository).findAllByNameContainingIgnoreCase("name");
+        verify(rpgClassMapper).rpgClassToRpgClassDTO(rpgClass1);
+        verify(rpgClassMapper).rpgClassToRpgClassDTO(rpgClass2);
     }
 }

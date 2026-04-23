@@ -1,8 +1,12 @@
 package com.smashingwizards.thewizardsbook_backend.repository;
 
+import com.smashingwizards.thewizardsbook_backend.dto.RpgClassDTO;
+import com.smashingwizards.thewizardsbook_backend.mapper.RpgClassMapper;
 import com.smashingwizards.thewizardsbook_backend.model.RpgClass;
 import com.smashingwizards.thewizardsbook_backend.model.Spell;
 import com.smashingwizards.thewizardsbook_backend.model.SpellClass;
+import com.smashingwizards.thewizardsbook_backend.service.RpgClassService;
+import com.smashingwizards.thewizardsbook_backend.service.impl.RpgClassServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @DataJpaTest
 public class SpellClassRepositoryTest {
@@ -22,6 +27,8 @@ public class SpellClassRepositoryTest {
     public SpellRepository spellRepository;
     @Autowired
     public RpgClassRepository rpgClassRepository;
+    @Autowired
+    private RpgClassService rpgClassService;
 
     @Test
     @DisplayName("Repository loads successfully")

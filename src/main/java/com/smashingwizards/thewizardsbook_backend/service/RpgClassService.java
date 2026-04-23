@@ -10,4 +10,7 @@ public interface RpgClassService {
     RpgClassDTO createRpgClass(RpgClassDTO rpgClassDTO);
     RpgClassDTO updateRpgClass(Long id, RpgClassDTO rpgClassDTO);
     void deleteRpgClass(Long id);
+
+    /** ADDs */
+    List<RpgClassDTO> getAllByNameContainingIgnoreCase(String name);
 }

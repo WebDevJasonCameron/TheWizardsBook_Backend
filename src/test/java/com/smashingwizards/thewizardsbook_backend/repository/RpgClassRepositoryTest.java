@@ -1,6 +1,7 @@
 package com.smashingwizards.thewizardsbook_backend.repository;
 
 import com.smashingwizards.thewizardsbook_backend.model.RpgClass;
+import org.checkerframework.checker.signature.qual.DotSeparatedIdentifiers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,5 +71,24 @@ public class RpgClassRepositoryTest {
 
         Optional<RpgClass> result = underTest.findById(saved.getId());
         assertFalse(result.isPresent());
+    }
+
+    /** ADDs */
+    @Test
+    @DisplayName("findAllByNameContainingIgnoreCase() whould return matching RpgClass")
+    void findAllByNameContainingIgnoreCase_shouldReturnMatchingRpgClass() {
+        RpgClass rpgClass1 = new RpgClass("Test Name 1", "Test SubClass 1", "Test Description 1");
+        RpgClass rpgClass2 = new RpgClass("Test Name 2", "Test SubClass 2", "Test Description 2");
+        RpgClass rpgClass3 = new RpgClass("Name 3", "Test SubClass 3", "Test Description 3");
+
+        underTest.save(rpgClass1);
+        underTest.save(rpgClass2);
+        underTest.save(rpgClass3);
+
+        List<RpgClass> results = underTest.findAllByNameContainingIgnoreCase("Test");
+
+        assertEquals(2, results.size());
+        assertTrue(results.stream().anyMatch(rpgClass -> rpgClass.getName().equals("Test Name 1")));
+        assertTrue(results.stream().anyMatch(rpgClass -> rpgClass.getName().equals("Test Name 2")));
     }
 }
