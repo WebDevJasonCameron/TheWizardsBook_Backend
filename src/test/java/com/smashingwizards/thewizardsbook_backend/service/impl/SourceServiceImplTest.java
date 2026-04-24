@@ -4,6 +4,7 @@ import com.smashingwizards.thewizardsbook_backend.dto.SourceDTO;
 import com.smashingwizards.thewizardsbook_backend.mapper.SourceMapper;
 import com.smashingwizards.thewizardsbook_backend.model.Source;
 import com.smashingwizards.thewizardsbook_backend.repository.SourceRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -176,6 +177,38 @@ public class SourceServiceImplTest {
         sourceService.deleteSource(1L);
 
         Mockito.verify(sourceRepositoryMock).deleteById(1L);
+    }
+
+    /** ADDs */
+    @Test
+    @DisplayName("getAllByNameContainingIgnoreCase() should return matching SourceDTOs")
+    void getAllByNameContainingIgnoreCase_shouldReturnMatchingSourceDTOs(){
+        SourceRepository sourceRepository = mock(SourceRepository.class);
+        SourceMapper sourceMapper = mock(SourceMapper.class);
+
+        sourceService = new SourceServiceImpl(sourceRepository, sourceMapper);
+
+        Source source1 = new Source("Test Name 1", "Test Publish Date 1", "Test Publisher 1");
+        Source source2 = new Source("Test Name 2", "Test Publish Date 2", "Test Publisher 2");
+
+        SourceDTO sourceDTO1 = new SourceDTO(1L, "Test Name 1", "Test Publish Date 1", "Test Publisher 1");
+        SourceDTO sourceDTO2 = new SourceDTO(2L, "Test Name 2", "Test Publish Date 2", "Test Publisher 2");
+
+        when(sourceRepository.findAllByNameContainingIgnoreCase("Test")).thenReturn(List.of(source1, source2));
+        when(sourceMapper.sourceToSourceDTO(source1)).thenReturn(sourceDTO1);
+        when(sourceMapper.sourceToSourceDTO(source2)).thenReturn(sourceDTO2);
+
+        List<SourceDTO> result = sourceService.getAllByNameContainingIgnoreCase("Test");
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+
+        assertEquals("Test Name 1", result.get(0).getName());
+        assertEquals("Test Name 2", result.get(1).getName());
+
+        verify(sourceRepository).findAllByNameContainingIgnoreCase("Test");
+        verify(sourceMapper).sourceToSourceDTO(source1);
+        verify(sourceMapper).sourceToSourceDTO(source2);
     }
 
 }

@@ -2,6 +2,7 @@ package com.smashingwizards.thewizardsbook_backend.controller;
 
 import com.smashingwizards.thewizardsbook_backend.dto.SourceDTO;
 import com.smashingwizards.thewizardsbook_backend.service.SourceService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -13,8 +14,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -122,5 +122,26 @@ public class SourceControllerTest {
 
         mockMvc.perform(delete("/api/sources/1"))
                 .andExpect(status().isNoContent());
+    }
+
+    /** ADDs */
+    @Test
+    @DisplayName("GET /api/sources/search?name=test should return matching sources")
+    void getSourcesByName_shouldReturnMatchingSources() throws Exception {
+        SourceDTO sourceDto1 = new SourceDTO(1L, "Test Name 1", "Test Publish Date 1", "Test Publisher 1");
+        SourceDTO sourceDto2 = new SourceDTO(2L, "Test Name 2", "Test Publish Date 2", "Test Publisher 2");
+
+        when(sourceService.getAllByNameContainingIgnoreCase("Test"))
+                .thenReturn(List.of(sourceDto1, sourceDto2));
+
+        mockMvc.perform(get("/api/sources/search")
+                        .param("name", "Test"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].name").value("Test Name 1"))
+                .andExpect(jsonPath("$[1].name").value("Test Name 2"));
+
+        verify(sourceService).getAllByNameContainingIgnoreCase("Test");
     }
 }

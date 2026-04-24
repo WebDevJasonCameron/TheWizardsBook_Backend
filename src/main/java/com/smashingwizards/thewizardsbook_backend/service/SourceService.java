@@ -10,4 +10,7 @@ public interface SourceService {
     SourceDTO createSource(SourceDTO sourceDTO);
     SourceDTO updateSource(Long id, SourceDTO sourceDTO);
     void deleteSource(Long id);
+
+    /** ADDs */
+    List<SourceDTO> getAllByNameContainingIgnoreCase(String name);
 }

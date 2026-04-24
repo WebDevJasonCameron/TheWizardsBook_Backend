@@ -45,4 +45,10 @@ public class SourceController {
         sourceService.deleteSource(id);
         return ResponseEntity.noContent().build();
     }
+
+    /** Adds */
+    @GetMapping("/search")
+    public ResponseEntity<List<SourceDTO>> getAllSourcesByName(@RequestParam String name) {
+        return ResponseEntity.ok(sourceService.getAllByNameContainingIgnoreCase(name));
+    }
 }

@@ -67,4 +67,13 @@ public class SourceServiceImpl implements SourceService {
         sourceRepository.deleteById(id);
     }
 
+    /** ADDs */
+    @Override
+    public List<SourceDTO> getAllByNameContainingIgnoreCase(String name) {
+        return sourceRepository.findAllByNameContainingIgnoreCase(name)
+                .stream()
+                .map(sourceMapper::sourceToSourceDTO)
+                .collect(Collectors.toList());
+    }
+
 }
