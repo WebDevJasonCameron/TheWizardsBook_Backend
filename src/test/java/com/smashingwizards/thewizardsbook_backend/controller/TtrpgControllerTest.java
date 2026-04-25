@@ -2,6 +2,7 @@ package com.smashingwizards.thewizardsbook_backend.controller;
 
 import com.smashingwizards.thewizardsbook_backend.dto.TtrpgDTO;
 import com.smashingwizards.thewizardsbook_backend.service.TtrpgService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -13,8 +14,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -115,5 +115,25 @@ public class TtrpgControllerTest {
 
         mockMvc.perform(delete("/api/ttrpgs/1"))
                 .andExpect(status().isNoContent());
+    }
+
+    /** ADDs */
+    @Test
+    @DisplayName("Get /api/ttrpgs/search?name=test should return matching ttrpgs")
+    void getTtrpgsByName_shouldReturnMatchingTtrpgs() throws Exception{
+        TtrpgDTO ttrpgDto1 = new TtrpgDTO(1L, "Test Name 1", "Test Version 1");
+        TtrpgDTO ttrpgDto2 = new TtrpgDTO(2L, "Test Name 2", "Test Version 2");
+
+        when(ttrpgService.getAllByNameContainingIgnoreCase(eq("Test"))).thenReturn(List.of(ttrpgDto1, ttrpgDto2));
+
+        mockMvc.perform(get("/api/ttrpgs/search")
+                        .param("name", "Test"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].name").value("Test Name 1"))
+                .andExpect(jsonPath("$[1].name").value("Test Name 2"));
+
+        verify(ttrpgService).getAllByNameContainingIgnoreCase(eq("Test"));
     }
 }

@@ -10,4 +10,7 @@ public interface TagService {
     TagDTO createTag(TagDTO tagDTO);
     TagDTO updateTag(Long id, TagDTO tagDTO);
     void deleteTag(Long id);
+
+    /** ADDs */
+    List<TagDTO> getAllByNameContainingIgnoreCase(String name);
 }

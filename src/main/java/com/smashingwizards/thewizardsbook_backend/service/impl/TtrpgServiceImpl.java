@@ -62,4 +62,13 @@ public class TtrpgServiceImpl implements TtrpgService {
     public void deleteTtrpg(Long id) {
         ttrpgRepository.deleteById(id);
     }
+
+    /** ADDs */
+    @Override
+    public List<TtrpgDTO> getAllByNameContainingIgnoreCase(String name) {
+        return ttrpgRepository.findAllByNameContainingIgnoreCase(name)
+                .stream()
+                .map(ttrpgMapper::ttrpgToTtrpgDTO)
+                .collect(java.util.stream.Collectors.toList());
+    }
 }

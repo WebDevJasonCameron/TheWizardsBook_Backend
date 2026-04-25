@@ -46,4 +46,10 @@ public class TtrpgController {
         ttrpgService.deleteTtrpg(id);
         return ResponseEntity.noContent().build();
     }
+
+    /** ADDs */
+    @GetMapping("/search")
+    public ResponseEntity<List<TtrpgDTO>> getAllByNameContainingIgnoreCase(@RequestParam String name) {
+        return ResponseEntity.ok(ttrpgService.getAllByNameContainingIgnoreCase(name));
+    }
 }

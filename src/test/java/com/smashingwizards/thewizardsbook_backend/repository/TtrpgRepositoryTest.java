@@ -68,4 +68,23 @@ public class TtrpgRepositoryTest {
         Optional<Ttrpg> result = underTest.findById(saved.getId());
         assertFalse(result.isPresent());
     }
+
+    /** ADDs */
+    @Test
+    @DisplayName("findAllByNameContainingIgnoreCase() should return matching ttrpgs")
+    void findAllByNameContainingIgnoreCase_shouldReturnMatchingTtrpgs() {
+        Ttrpg Ttrpg1 = new Ttrpg("Test Name 1", "Test Version 1");
+        Ttrpg Ttrpg2 = new Ttrpg("Test Name 2", "Test Version 2");
+        Ttrpg Ttrpg3 = new Ttrpg("Name 3", "Test Version 3");
+
+        underTest.save(Ttrpg1);
+        underTest.save(Ttrpg2);
+        underTest.save(Ttrpg3);
+
+        List<Ttrpg> results = underTest.findAllByNameContainingIgnoreCase("Test");
+
+        assertEquals(2, results.size());
+        assertTrue(results.stream().anyMatch(ttrpg -> ttrpg.getName().equals("Test Name 1")));
+        assertTrue(results.stream().anyMatch(ttrpg -> ttrpg.getName().equals("Test Name 2")));
+    }
 }

@@ -4,6 +4,7 @@ import com.smashingwizards.thewizardsbook_backend.dto.TtrpgDTO;
 import com.smashingwizards.thewizardsbook_backend.mapper.TtrpgMapper;
 import com.smashingwizards.thewizardsbook_backend.model.Ttrpg;
 import com.smashingwizards.thewizardsbook_backend.repository.TtrpgRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -164,5 +165,40 @@ public class TtrpgServiceImplTest {
         ttrpgService.deleteTtrpg(1L);
 
         verify(ttrpgRepositoryMock).deleteById(1L);
+    }
+
+    /** ADDs */
+    @Test
+    @DisplayName("getAllByNameContainingIgnorCase() should return matching TagDTOs")
+    void getAllByNameContainingIgnoreCase_shouldReturnMatchingTagDTOs(){
+        TtrpgRepository ttrpgRepository = mock(TtrpgRepository.class);
+        TtrpgMapper ttrpgMapper = mock(TtrpgMapper.class);
+
+        ttrpgService = new TtrpgServiceImpl(ttrpgRepository, ttrpgMapper);
+
+        Ttrpg ttrpg1 = new Ttrpg("Test Name 1", "Test Version 1");
+        Ttrpg ttrpg2 = new Ttrpg("Test Name 2", "Test Version 2");
+
+        TtrpgDTO ttrpgDTO1 = new TtrpgDTO(1L, "Test Name 1", "Test Version 1");
+        TtrpgDTO ttrpgDTO2 = new TtrpgDTO(2L, "Test Name 2", "Test Version 2");
+
+        when(ttrpgRepository.findAllByNameContainingIgnoreCase("Test")).thenReturn(List.of(ttrpg1, ttrpg2));
+        when(ttrpgMapper.ttrpgToTtrpgDTO(ttrpg1)).thenReturn(ttrpgDTO1);
+        when(ttrpgMapper.ttrpgToTtrpgDTO(ttrpg2)).thenReturn(ttrpgDTO2);
+
+        List<TtrpgDTO> result = ttrpgService.getAllByNameContainingIgnoreCase("Test");
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+
+        assertEquals("Test Name 1", result.get(0).getName());
+        assertEquals("Test Version 1", result.get(0).getVersion());
+
+        assertEquals("Test Name 2", result.get(1).getName());
+        assertEquals("Test Version 2", result.get(1).getVersion());
+
+        verify(ttrpgRepository).findAllByNameContainingIgnoreCase("Test");
+        verify(ttrpgMapper).ttrpgToTtrpgDTO(ttrpg1);
+        verify(ttrpgMapper).ttrpgToTtrpgDTO(ttrpg2);
     }
 }

@@ -45,4 +45,10 @@ public class TypeController {
         typeService.deleteType(id);
         return ResponseEntity.noContent().build();
     }
+
+    /** ADDs */
+    @GetMapping("/search")
+    public ResponseEntity<List<TypeDTO>> getAllByNameContainingIgnoreCase(@RequestParam String name) {
+        return ResponseEntity.ok(typeService.getAllByNameContainingIgnoreCase(name));
+    }
 }

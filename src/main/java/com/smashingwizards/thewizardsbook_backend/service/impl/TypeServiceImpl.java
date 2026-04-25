@@ -62,4 +62,13 @@ public class TypeServiceImpl implements TypeService {
     public void deleteType(Long id) {
         typeRepository.deleteById(id);
     }
+
+    /** ADDs */
+    @Override
+    public List<TypeDTO> getAllByNameContainingIgnoreCase(String name) {
+        return typeRepository.findAllByNameContainingIgnoreCase(name)
+                .stream()
+                .map(typeMapper::typeToTypeDTO)
+                .collect(Collectors.toList());
+    }
 }

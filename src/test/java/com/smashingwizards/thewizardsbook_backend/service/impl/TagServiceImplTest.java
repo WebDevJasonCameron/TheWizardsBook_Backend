@@ -4,7 +4,10 @@ import com.smashingwizards.thewizardsbook_backend.dto.TagDTO;
 import com.smashingwizards.thewizardsbook_backend.mapper.TagMapper;
 import com.smashingwizards.thewizardsbook_backend.model.Tag;
 import com.smashingwizards.thewizardsbook_backend.repository.TagRepository;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledInNativeImage;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -164,5 +167,37 @@ public class TagServiceImplTest {
         tagService.deleteTag(1L);
 
         verify(tagRepositoryMock).deleteById(1L);
+    }
+
+    /** ADDs */
+    @Test
+    @DisplayName("getAllByNameContainingIgnoreCase() should return matching TagDTOs")
+    void getAllByNameContainingIgnoreCase_shouldReturnMatchingTagDTOs(){
+        TagRepository tagRepository = mock(TagRepository.class);
+        TagMapper tagMapper = mock(TagMapper.class);
+
+        tagService = new TagServiceImpl(tagRepository, tagMapper);
+
+        Tag tag1 = new Tag("Test Name 1", "Test Type 1");
+        Tag tag2 = new Tag("Test Name 2", "Test Type 2");
+
+        TagDTO tagDTO1 = new TagDTO(1L, "Test Name 1", "Test Type 1");
+        TagDTO tagDTO2 = new TagDTO(2L, "Test Name 2", "Test Type 2");
+
+        when(tagRepository.findAllByNameContainingIgnoreCase("Test")).thenReturn(List.of(tag1, tag2));
+        when(tagMapper.tagToTagDTO(tag1)).thenReturn(tagDTO1);
+        when(tagMapper.tagToTagDTO(tag2)).thenReturn(tagDTO2);
+
+        List<TagDTO> result = tagService.getAllByNameContainingIgnoreCase("Test");
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+
+        assertEquals("Test Name 1", result.get(0).getName());
+        assertEquals("Test Name 2", result.get(1).getName());
+
+        verify(tagRepository).findAllByNameContainingIgnoreCase("Test");
+        verify(tagMapper).tagToTagDTO(tag1);
+        verify(tagMapper).tagToTagDTO(tag2);
     }
 }

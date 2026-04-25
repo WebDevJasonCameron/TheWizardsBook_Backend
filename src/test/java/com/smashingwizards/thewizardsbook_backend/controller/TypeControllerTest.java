@@ -2,6 +2,7 @@ package com.smashingwizards.thewizardsbook_backend.controller;
 
 import com.smashingwizards.thewizardsbook_backend.dto.TypeDTO;
 import com.smashingwizards.thewizardsbook_backend.service.TypeService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -13,8 +14,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -117,5 +117,25 @@ public class TypeControllerTest {
 
         mockMvc.perform(delete("/api/types/1"))
                 .andExpect(status().isNoContent());
+    }
+
+    /** ADDs */
+    @Test
+    @DisplayName("GET /api/types/search?name=test should return matching types")
+    void getTypesByName_shouldReturnMatchingTypes() throws Exception {
+        TypeDTO typeDto1 = new TypeDTO(1L, "Test Name 1", "Test SubType 1");
+        TypeDTO typeDto2 = new TypeDTO(2L, "Test Name 2", "Test SubType 2");
+
+        when(typeService.getAllByNameContainingIgnoreCase(eq("Test"))).thenReturn(List.of(typeDto1, typeDto2));
+
+        mockMvc.perform(get("/api/types/search")
+                        .param("name", "Test"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].name").value("Test Name 1"))
+                .andExpect(jsonPath("$[1].name").value("Test Name 2"));
+
+        verify(typeService).getAllByNameContainingIgnoreCase(eq("Test"));
     }
 }

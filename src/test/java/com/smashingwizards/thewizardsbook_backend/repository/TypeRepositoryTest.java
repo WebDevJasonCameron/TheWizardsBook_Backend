@@ -67,4 +67,24 @@ public class TypeRepositoryTest {
         Optional<Type> result = underTest.findById(saved.getId());
         assertFalse(result.isPresent());
     }
+
+    /** ADDs */
+    @Test
+    @DisplayName("findAllByNameContainingIgnoreCase() should return matching types")
+    void findAllByNameContainingIgnoreCase_shouldReturnMatchingTypes() {
+        Type type1 = new Type("Test Name 1", "Test Sub Type 1");
+        Type type2 = new Type("Test Name 2", "Test Sub Type 2");
+        Type type3 = new Type("Name 3", "Test Sub Type 3");
+
+        underTest.save(type1);
+        underTest.save(type2);
+        underTest.save(type3);
+
+        List<Type> results = underTest.findAllByNameContainingIgnoreCase("Test");
+
+        assertEquals(2, results.size());
+        assertTrue(results.stream().anyMatch(type -> type.getName().equals("Test Name 1")));
+        assertTrue(results.stream().anyMatch(type -> type.getName().equals("Test Name 2")));
+
+    }
 }

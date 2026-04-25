@@ -10,4 +10,7 @@ public interface TtrpgService {
     TtrpgDTO createTtrpg(TtrpgDTO ttrpgDTO);
     TtrpgDTO updateTtrpg(Long id, TtrpgDTO ttrpgDTO);
     void deleteTtrpg(Long id);
+
+    /** ADDs */
+    List<TtrpgDTO> getAllByNameContainingIgnoreCase(String name);
 }

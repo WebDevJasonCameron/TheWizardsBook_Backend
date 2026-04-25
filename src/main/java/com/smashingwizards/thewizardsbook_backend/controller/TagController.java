@@ -45,4 +45,10 @@ public class TagController {
         tagService.deleteTag(id);
         return ResponseEntity.noContent().build();
     }
+
+    /** ADDs */
+    @GetMapping("/search")
+    public ResponseEntity<List<TagDTO>> getAllTagsByName(@RequestParam String name) {
+        return ResponseEntity.ok(tagService.getAllByNameContainingIgnoreCase(name));
+    }
 }

@@ -63,4 +63,12 @@ public class TagServiceImpl implements TagService {
     public void deleteTag(Long id) {
         tagRepository.deleteById(id);
     }
+
+    /** ADDs */
+    public List<TagDTO> getAllByNameContainingIgnoreCase(String name) {
+        return tagRepository.findAllByNameContainingIgnoreCase(name)
+                .stream()
+                .map(tagMapper::tagToTagDTO)
+                .collect(Collectors.toList());
+    }
 }

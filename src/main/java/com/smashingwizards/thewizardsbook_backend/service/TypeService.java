@@ -10,4 +10,7 @@ public interface TypeService {
     TypeDTO createType(TypeDTO typeDTO);
     TypeDTO updateType(Long id, TypeDTO typeDTO);
     void deleteType(Long id);
+
+    /** ADDs */
+    List<TypeDTO> getAllByNameContainingIgnoreCase(String name);
 }

@@ -3,6 +3,7 @@ package com.smashingwizards.thewizardsbook_backend.controller;
 
 import com.smashingwizards.thewizardsbook_backend.dto.TagDTO;
 import com.smashingwizards.thewizardsbook_backend.service.TagService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -14,8 +15,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -116,5 +116,25 @@ public class TagControllerTest {
 
         mockMvc.perform(delete("/api/tags/1"))
                 .andExpect(status().isNoContent());
+    }
+
+    /** ADDs */
+    @Test
+    @DisplayName("GET /api/tags/search?name=test should return matching tags")
+    void getTagsByName_shouldReturnMatchingTags() throws Exception {
+        TagDTO tagDto1 = new TagDTO(1L, "Test Name 1", "Test Type 1");
+        TagDTO tagDto2 = new TagDTO(2L, "Test Name 2", "Test Type 2");
+
+        when(tagService.getAllByNameContainingIgnoreCase(eq("Test"))).thenReturn(List.of(tagDto1, tagDto2));
+
+        mockMvc.perform(get("/api/tags/search")
+                        .param("name", "Test"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].name").value("Test Name 1"))
+                .andExpect(jsonPath("$[1].name").value("Test Name 2"));
+
+        verify(tagService).getAllByNameContainingIgnoreCase(eq("Test"));
     }
 }

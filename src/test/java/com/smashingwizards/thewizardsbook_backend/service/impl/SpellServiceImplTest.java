@@ -220,7 +220,6 @@ public class SpellServiceImplTest {
 
         when(spellRepository.findAllByNameContainingIgnoreCase("Test"))
                 .thenReturn(List.of(spell1, spell2));
-
         when(spellMapper.spellToSpellDTO(spell1)).thenReturn(spellDto1);
         when(spellMapper.spellToSpellDTO(spell2)).thenReturn(spellDto2);
 

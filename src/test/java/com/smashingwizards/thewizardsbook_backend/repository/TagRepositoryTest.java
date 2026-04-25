@@ -69,4 +69,23 @@ public class TagRepositoryTest {
         Optional<Tag> result = underTest.findById(saved.getId());
         assertFalse(result.isPresent());
     }
+
+    /** ADDs */
+    @Test
+    @DisplayName("findAllByNameContainingIgnoreCase() should return matching tags")
+    void findAllByNameContainingIgnoreCase_shouldReturnMatchingTags() {
+        Tag tag1 = new Tag("Test Name 1", "tag type");
+        Tag tag2 = new Tag("Test Name 2", "tag type");
+        Tag tag3 = new Tag("Name 3", "tag type");
+
+        underTest.save(tag1);
+        underTest.save(tag2);
+        underTest.save(tag3);
+
+        List<Tag> results = underTest.findAllByNameContainingIgnoreCase("Test");
+
+        assertEquals(2, results.size());
+        assertTrue(results.stream().anyMatch(tag -> tag.getName().equals("Test Name 1")));
+        assertTrue(results.stream().anyMatch(tag -> tag.getName().equals("Test Name 2")));
+    }
 }

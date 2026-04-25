@@ -47,7 +47,6 @@ public class SpellController {
     }
 
     /** ADDs */
-
     @GetMapping("/search")
     public ResponseEntity<List<SpellDTO>> getAllByNameContainingIgnoreCase(@RequestParam String name) {
         return ResponseEntity.ok(spellService.getAllByNameContainingIgnoreCase(name));
