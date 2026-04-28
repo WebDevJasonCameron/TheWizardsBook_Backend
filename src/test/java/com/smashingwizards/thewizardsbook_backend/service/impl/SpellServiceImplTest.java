@@ -2,7 +2,10 @@ package com.smashingwizards.thewizardsbook_backend.service.impl;
 
 import com.smashingwizards.thewizardsbook_backend.dto.SpellDTO;
 import com.smashingwizards.thewizardsbook_backend.mapper.SpellMapper;
+import com.smashingwizards.thewizardsbook_backend.model.RpgClass;
 import com.smashingwizards.thewizardsbook_backend.model.Spell;
+import com.smashingwizards.thewizardsbook_backend.model.SpellClass;
+import com.smashingwizards.thewizardsbook_backend.repository.SpellClassRepository;
 import com.smashingwizards.thewizardsbook_backend.repository.SpellRepository;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.DisplayName;
@@ -25,6 +28,8 @@ public class SpellServiceImplTest {
     private SpellRepository spellRepositoryMock;
     @Mock
     private SpellMapper spellMapperMock;
+    @Mock
+    private SpellClassRepository spellClassRepositoryMock;
 
     @InjectMocks
     private SpellServiceImpl spellService;
@@ -152,7 +157,7 @@ public class SpellServiceImplTest {
         SpellRepository spellRepository = mock(SpellRepository.class);
         SpellMapper spellMapper = mock(SpellMapper.class);
 
-        spellService = new SpellServiceImpl(spellRepository, spellMapper);
+        spellService = new SpellServiceImpl(spellRepository, spellClassRepositoryMock, spellMapper);
 
         Spell spell1 = new Spell(
                 "Test Name 1",
@@ -235,6 +240,72 @@ public class SpellServiceImplTest {
         assertEquals("Test Level 2", results.get(1).getLevel());
 
         verify(spellRepository).findAllByNameContainingIgnoreCase("Test");
+        verify(spellMapper).spellToSpellDTO(spell1);
+        verify(spellMapper).spellToSpellDTO(spell2);
+    }
+
+    @Test
+    @DisplayName("getAllByRpgClassId() should return matching Spells")
+    void getAllByRpgClassNameContainingIgnoreCase_shouldReturnMatchingSpells(){
+        SpellRepository spellRepository = mock(SpellRepository.class);
+        SpellMapper spellMapper = mock(SpellMapper.class);
+
+        spellService = new SpellServiceImpl(spellRepository, spellClassRepositoryMock, spellMapper);
+
+        Spell spell1 = new Spell(
+                "Test Spell Name 1",
+                "Test Level 1",
+                "Test CastingTime 1",
+                "Test RangeArea 1",
+                false,
+                false,
+                false,
+                "Test ComponentMaterials 1",
+                "Test Duration 1",
+                false,
+                false,
+                "Test School 1",
+                "Test Description 1"
+        );
+
+        Spell spell2 = new Spell(
+                "Test Spell Name 2",
+                "Test Level 2",
+                "Test CastingTime 2",
+                "Test RangeArea 2",
+                false,
+                false,
+                false,
+                "Test ComponentMaterials 2",
+                "Test Duration 2",
+                false,
+                false,
+                "Test School 2",
+                "Test Description 2"
+        );
+
+        RpgClass rpgClass = new RpgClass("Test Class", "Test SubClass", "Test Description");
+
+        SpellClass spellClass1 = new SpellClass(spell1, rpgClass);
+        SpellClass spellClass2 = new SpellClass(spell2, rpgClass);
+
+        SpellDTO spellDto1 = new SpellDTO();
+        spellDto1.setName("Test Spell Name 1");
+
+        SpellDTO spellDto2 = new SpellDTO();
+        spellDto2.setName("Test Spell Name 2");
+
+        when(spellClassRepositoryMock.findAllByRpgClass_NameContainingIgnoreCase("Test")).thenReturn(List.of(spellClass1, spellClass2));
+        when(spellMapper.spellToSpellDTO(spell1)).thenReturn(spellDto1);
+        when(spellMapper.spellToSpellDTO(spell2)).thenReturn(spellDto2);
+
+        List<SpellDTO> results = spellService.getAllByRpgClassNameContainingIgnoreCase("Test");
+
+        assertEquals(2, results.size());
+        assertEquals("Test Spell Name 1", results.get(0).getName());
+        assertEquals("Test Spell Name 2", results.get(1).getName());
+
+        verify(spellClassRepositoryMock).findAllByRpgClass_NameContainingIgnoreCase("Test");
         verify(spellMapper).spellToSpellDTO(spell1);
         verify(spellMapper).spellToSpellDTO(spell2);
     }

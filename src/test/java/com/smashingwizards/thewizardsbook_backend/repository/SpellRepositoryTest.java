@@ -3,6 +3,7 @@ package com.smashingwizards.thewizardsbook_backend.repository;
 import com.smashingwizards.thewizardsbook_backend.dto.SpellDTO;
 import com.smashingwizards.thewizardsbook_backend.mapper.SpellMapper;
 import com.smashingwizards.thewizardsbook_backend.model.Spell;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,10 @@ import static org.mockito.Mockito.when;
 public class SpellRepositoryTest {
 
     @Autowired
+    private SpellClassRepository spellClassRepository;
+    @Autowired
+    private RpgClassRepository rpgClassRepository;
+    @Autowired
     private SpellRepository underTest;
 
     @Test
@@ -29,24 +34,25 @@ public class SpellRepositoryTest {
     @Test
     @DisplayName("save() should persist a Spell")
     void save_shouldPersistSpell() {
-        Spell spell = new Spell("name", "level", "casting time", "range", false, false, false, "", "duration", false, false, "school", "description");
+        Spell spell = getSpell(null);
+
         Spell saved = underTest.save(spell);
 
         assertNotNull(saved);
         assertNotNull(saved.getId());
-        assertEquals("name", saved.getName());
-        assertEquals("level", saved.getLevel());
-        assertEquals("casting time", saved.getCastingTime());
-        assertEquals("range", saved.getRangeArea());
+        assertEquals("Test Spell Name", saved.getName());
+        assertEquals("Test Level", saved.getLevel());
+        assertEquals("Test CastingTime", saved.getCastingTime());
+        assertEquals("Test Range", saved.getRangeArea());
         assertFalse(saved.getComponentVisual());
         assertFalse(saved.getComponentSemantic());
         assertFalse(saved.getComponentMaterial());
-        assertEquals("", saved.getComponentMaterials());
-        assertEquals("duration", saved.getDuration());
+        assertEquals("Test Materials", saved.getComponentMaterials());
+        assertEquals("Test Duration", saved.getDuration());
         assertFalse(saved.getConcentration());
         assertFalse(saved.getRitual());
-        assertEquals("school", saved.getSchool());
-        assertEquals("description", saved.getDescription());
+        assertEquals("Test School", saved.getSchool());
+        assertEquals("Test Description", saved.getDescription());
     }
 
     @Test
@@ -117,5 +123,33 @@ public class SpellRepositoryTest {
         assertTrue(results.stream().anyMatch(spell -> spell.getName().equals("Test Name 1")));
         assertTrue(results.stream().anyMatch(spell -> spell.getName().equals("Test Name 2")));
 
+    }
+
+    /** SUPs */
+    private static @NonNull Spell getSpell(Long num) {
+        String numString = (num != null) ? " " + num : "";
+
+        Spell spell = new Spell();
+
+        // Only set ID when you are intentionally testing an existing object.
+        if (num != null) {
+            spell.setId(num);
+        }
+
+        spell.setName("Test Spell Name" + numString);
+        spell.setLevel("Test Level");
+        spell.setCastingTime("Test CastingTime");
+        spell.setRangeArea("Test Range");
+        spell.setComponentVisual(false);
+        spell.setComponentSemantic(false);
+        spell.setComponentMaterial(false);
+        spell.setComponentMaterials("Test Materials");
+        spell.setDuration("Test Duration");
+        spell.setConcentration(false);
+        spell.setRitual(false);
+        spell.setSchool("Test School");
+        spell.setDescription("Test Description");
+
+        return spell;
     }
 }

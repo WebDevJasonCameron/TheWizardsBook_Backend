@@ -1,7 +1,9 @@
 package com.smashingwizards.thewizardsbook_backend.controller;
 
 import com.smashingwizards.thewizardsbook_backend.dto.SpellDTO;
+import com.smashingwizards.thewizardsbook_backend.model.Spell;
 import com.smashingwizards.thewizardsbook_backend.service.SpellService;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -195,37 +197,8 @@ public class SpellControllerTest {
     @Test
     @DisplayName("GET /api/spells/search?name=test should return matching spells")
     void getSpellsByName_shouldReturnMatchingSpells() throws Exception {
-        SpellDTO spellDto1 = new SpellDTO();
-        spellDto1.setId(1L);
-        spellDto1.setName("Test Name 1");
-        spellDto1.setLevel("Test Level 1");
-        spellDto1.setCastingTime("Test CastingTime 1");
-        spellDto1.setRangeArea("Test RangeArea 1");
-        spellDto1.setComponentVisual(false);
-        spellDto1.setComponentSemantic(false);
-        spellDto1.setComponentMaterial(false);
-        spellDto1.setComponentMaterials("Test ComponentMaterials 1");
-        spellDto1.setDuration("Test Duration 1");
-        spellDto1.setConcentration(false);
-        spellDto1.setRitual(false);
-        spellDto1.setSchool("Test School 1");
-        spellDto1.setDescription("Test Description 1");
-
-        SpellDTO spellDto2 = new SpellDTO();
-        spellDto2.setId(2L);
-        spellDto2.setName("Test Name 2");
-        spellDto2.setLevel("Test Level 2");
-        spellDto2.setCastingTime("Test CastingTime 2");
-        spellDto2.setRangeArea("Test RangeArea 2");
-        spellDto2.setComponentVisual(false);
-        spellDto2.setComponentSemantic(false);
-        spellDto2.setComponentMaterial(false);
-        spellDto2.setComponentMaterials("Test ComponentMaterials 2");
-        spellDto2.setDuration("Test Duration 2");
-        spellDto2.setConcentration(false);
-        spellDto2.setRitual(false);
-        spellDto2.setSchool("Test School 2");
-        spellDto2.setDescription("Test Description 2");
+        SpellDTO spellDto1 = getSpellDTO(1L);
+        SpellDTO spellDto2 = getSpellDTO(2L);
 
         when(spellService.getAllByNameContainingIgnoreCase(eq("Test"))).thenReturn(List.of(spellDto1, spellDto2));
 
@@ -235,34 +208,76 @@ public class SpellControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$[0].id").value(1L))
-                .andExpect(jsonPath("$[0].name").value("Test Name 1"))
-                .andExpect(jsonPath("$[0].level").value("Test Level 1"))
-                .andExpect(jsonPath("$[0].castingTime").value("Test CastingTime 1"))
-                .andExpect(jsonPath("$[0].rangeArea").value("Test RangeArea 1"))
+                .andExpect(jsonPath("$[0].name").value("Test Spell Name 1"))
+                .andExpect(jsonPath("$[0].level").value("Test Level"))
+                .andExpect(jsonPath("$[0].castingTime").value("Test CastingTime"))
+                .andExpect(jsonPath("$[0].rangeArea").value("Test Range"))
                 .andExpect(jsonPath("$[0].componentVisual").value(false))
                 .andExpect(jsonPath("$[0].componentSemantic").value(false))
                 .andExpect(jsonPath("$[0].componentMaterial").value(false))
-                .andExpect(jsonPath("$[0].componentMaterials").value("Test ComponentMaterials 1"))
-                .andExpect(jsonPath("$[0].duration").value("Test Duration 1"))
+                .andExpect(jsonPath("$[0].componentMaterials").value("Test Materials"))
+                .andExpect(jsonPath("$[0].duration").value("Test Duration"))
                 .andExpect(jsonPath("$[0].concentration").value(false))
                 .andExpect(jsonPath("$[0].ritual").value(false))
-                .andExpect(jsonPath("$[0].school").value("Test School 1"))
-                .andExpect(jsonPath("$[0].description").value("Test Description 1"))
+                .andExpect(jsonPath("$[0].school").value("Test School"))
+                .andExpect(jsonPath("$[0].description").value("Test Description"))
                 .andExpect(jsonPath("$[1].id").value(2L))
-                .andExpect(jsonPath("$[1].name").value("Test Name 2"))
-                .andExpect(jsonPath("$[1].level").value("Test Level 2"))
-                .andExpect(jsonPath("$[1].castingTime").value("Test CastingTime 2"))
-                .andExpect(jsonPath("$[1].rangeArea").value("Test RangeArea 2"))
+                .andExpect(jsonPath("$[1].name").value("Test Spell Name 2"))
+                .andExpect(jsonPath("$[1].level").value("Test Level"))
+                .andExpect(jsonPath("$[1].castingTime").value("Test CastingTime"))
+                .andExpect(jsonPath("$[1].rangeArea").value("Test Range"))
                 .andExpect(jsonPath("$[1].componentVisual").value(false))
                 .andExpect(jsonPath("$[1].componentSemantic").value(false))
                 .andExpect(jsonPath("$[1].componentMaterial").value(false))
-                .andExpect(jsonPath("$[1].componentMaterials").value("Test ComponentMaterials 2"))
-                .andExpect(jsonPath("$[1].duration").value("Test Duration 2"))
+                .andExpect(jsonPath("$[1].componentMaterials").value("Test Materials"))
+                .andExpect(jsonPath("$[1].duration").value("Test Duration"))
                 .andExpect(jsonPath("$[1].concentration").value(false))
                 .andExpect(jsonPath("$[1].ritual").value(false))
-                .andExpect(jsonPath("$[1].school").value("Test School 2"))
-                .andExpect(jsonPath("$[1].description").value("Test Description 2"));
+                .andExpect(jsonPath("$[1].school").value("Test School"))
+                .andExpect(jsonPath("$[1].description").value("Test Description"));
 
         verify(spellService).getAllByNameContainingIgnoreCase(eq("Test"));
     }
+
+    @Test
+    @DisplayName("GET /api/spells/search/by-rpg-class?name=test should return matching spells")
+    void getAllByRpgClassNameContainingIgnorCase_shouldReturnMatchingSpells() throws Exception {
+        SpellDTO spellDto1 = getSpellDTO(1L);
+        SpellDTO spellDto2 = getSpellDTO(2L);
+
+        when(spellService.getAllByRpgClassNameContainingIgnoreCase(eq("Test"))).thenReturn(List.of(spellDto1, spellDto2));
+
+        mockMvc.perform(get("/api/spells/search/by-rpg-class")
+                        .param("name", "Test"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].id").value(1L))
+                .andExpect(jsonPath("$[0].name").value("Test Spell Name 1"))
+                .andExpect(jsonPath("$[1].id").value(2L))
+                .andExpect(jsonPath("$[1].name").value("Test Spell Name 2"));
+
+        verify(spellService).getAllByRpgClassNameContainingIgnoreCase(eq("Test"));
+    }
+
+    /** SUPs */
+    private static @NonNull SpellDTO getSpellDTO(Long num) {
+        SpellDTO spellDto = new SpellDTO();
+        spellDto.setId(num);
+        spellDto.setName("Test Spell Name " + num);
+        spellDto.setLevel("Test Level");
+        spellDto.setCastingTime("Test CastingTime");
+        spellDto.setRangeArea("Test Range");
+        spellDto.setComponentVisual(false);
+        spellDto.setComponentSemantic(false);
+        spellDto.setComponentMaterial(false);
+        spellDto.setComponentMaterials("Test Materials");
+        spellDto.setDuration("Test Duration");
+        spellDto.setConcentration(false);
+        spellDto.setRitual(false);
+        spellDto.setSchool("Test School");
+        spellDto.setDescription("Test Description");
+        return spellDto;
+    }
+
 }
