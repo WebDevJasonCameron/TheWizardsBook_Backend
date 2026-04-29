@@ -4,8 +4,10 @@ import com.smashingwizards.thewizardsbook_backend.dto.SpellDTO;
 import com.smashingwizards.thewizardsbook_backend.mapper.SpellMapper;
 import com.smashingwizards.thewizardsbook_backend.model.Spell;
 import com.smashingwizards.thewizardsbook_backend.model.SpellClass;
+import com.smashingwizards.thewizardsbook_backend.model.SpellSource;
 import com.smashingwizards.thewizardsbook_backend.repository.SpellClassRepository;
 import com.smashingwizards.thewizardsbook_backend.repository.SpellRepository;
+import com.smashingwizards.thewizardsbook_backend.repository.SpellSourceRepository;
 import com.smashingwizards.thewizardsbook_backend.service.SpellService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,12 +21,14 @@ public class SpellServiceImpl implements SpellService {
 
     private SpellRepository spellRepository;
     private final SpellClassRepository spellClassRepository;
+    private final SpellSourceRepository spellSourceRepository;
     public SpellMapper spellMapper;
 
     // CONs
-    public SpellServiceImpl(SpellRepository spellRepository, SpellClassRepository spellClassRepository, SpellMapper spellMapper) {
+    public SpellServiceImpl(SpellRepository spellRepository, SpellClassRepository spellClassRepository, SpellSourceRepository spellSourceRepository, SpellMapper spellMapper) {
         this.spellRepository = spellRepository;
         this.spellClassRepository = spellClassRepository;
+        this.spellSourceRepository = spellSourceRepository;
         this.spellMapper = spellMapper;
     }
 
@@ -95,6 +99,15 @@ public class SpellServiceImpl implements SpellService {
         return spellClassRepository.findAllByRpgClass_NameContainingIgnoreCase(name)
                 .stream()
                 .map(SpellClass::getSpell)
+                .map(spellMapper::spellToSpellDTO)
+                .toList();
+    }
+
+    @Override
+    public List<SpellDTO> getAllBySourceNameContainingIgnoreCase(String name) {
+        return spellSourceRepository.findAllBySource_NameContainingIgnoreCase(name)
+                .stream()
+                .map(SpellSource::getSpell)
                 .map(spellMapper::spellToSpellDTO)
                 .toList();
     }

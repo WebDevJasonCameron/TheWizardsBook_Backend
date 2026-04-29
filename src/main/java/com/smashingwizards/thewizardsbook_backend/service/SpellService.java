@@ -14,4 +14,5 @@ public interface SpellService {
     /** ADDs */
     List<SpellDTO> getAllByNameContainingIgnoreCase(String name);
     List<SpellDTO> getAllByRpgClassNameContainingIgnoreCase(String name);
+    List<SpellDTO> getAllBySourceNameContainingIgnoreCase(String name);
 }

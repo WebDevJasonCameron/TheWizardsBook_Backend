@@ -2,11 +2,10 @@ package com.smashingwizards.thewizardsbook_backend.service.impl;
 
 import com.smashingwizards.thewizardsbook_backend.dto.SpellDTO;
 import com.smashingwizards.thewizardsbook_backend.mapper.SpellMapper;
-import com.smashingwizards.thewizardsbook_backend.model.RpgClass;
-import com.smashingwizards.thewizardsbook_backend.model.Spell;
-import com.smashingwizards.thewizardsbook_backend.model.SpellClass;
+import com.smashingwizards.thewizardsbook_backend.model.*;
 import com.smashingwizards.thewizardsbook_backend.repository.SpellClassRepository;
 import com.smashingwizards.thewizardsbook_backend.repository.SpellRepository;
+import com.smashingwizards.thewizardsbook_backend.repository.SpellSourceRepository;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,20 +29,22 @@ public class SpellServiceImplTest {
     private SpellMapper spellMapperMock;
     @Mock
     private SpellClassRepository spellClassRepositoryMock;
+    @Mock
+    private SpellSourceRepository spellSourceRepositoryMock;
 
     @InjectMocks
-    private SpellServiceImpl spellService;
+    private SpellServiceImpl underTest;
 
     @Test
     void getAllSpells_shouldReturnLstOfSpellDTOs() {
         Spell spell = getSpell();
 
-        SpellDTO spellDto = new SpellDTO(1L, "Test Name", "Test Level", "Test CastingTime", "Test Range", false, false, false, "Test Materials", "Test Duration", false, false, "Test School", "Test Description");
+        SpellDTO spellDto = getSpellDTO(null);
 
         when(spellRepositoryMock.findAll()).thenReturn(List.of(spell));
         when(spellMapperMock.spellToSpellDTO(spell)).thenReturn(spellDto);
 
-        List<SpellDTO> result = spellService.getAllSpells();
+        List<SpellDTO> result = underTest.getAllSpells();
 
         assertNotNull(result);
         assertEquals(1, result.size());
@@ -57,12 +58,12 @@ public class SpellServiceImplTest {
     void getSpellById_shouldReturnSpellDTO() {
         Spell spell = getSpell();
 
-        SpellDTO spellDto = new SpellDTO(1L, "Test Name", "Test Level", "Test CastingTime", "Test Range", false, false, false, "Test Materials", "Test Duration", false, false, "Test School", "Test Description");
+        SpellDTO spellDto = getSpellDTO(null);
 
         when(spellRepositoryMock.findById(1L)).thenReturn(java.util.Optional.of(spell));
         when(spellMapperMock.spellToSpellDTO(spell)).thenReturn(spellDto);
 
-        SpellDTO result = spellService.getSpellById(1L);
+        SpellDTO result = underTest.getSpellById(1L);
 
         assertNotNull(result);
         assertEquals(spellDto, result);
@@ -75,7 +76,7 @@ public class SpellServiceImplTest {
     void getSpellById_shouldThrowException_whenNotFound() {
         when(spellRepositoryMock.findById(1L)).thenReturn(java.util.Optional.empty());
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> spellService.getSpellById(1L));
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> underTest.getSpellById(1L));
 
         assertEquals("Spell not found", exception.getMessage());
         verify(spellRepositoryMock).findById(1L);
@@ -84,7 +85,7 @@ public class SpellServiceImplTest {
 
     @Test
     void createSpell_shouldReturnSpellDTO() {
-        SpellDTO spellDto = new SpellDTO(1L, "Test Name", "Test Level", "Test CastingTime", "Test Range", false, false, false, "Test Materials", "Test Duration", false, false, "Test School", "Test Description");
+        SpellDTO spellDto = getSpellDTO(null);
 
         Spell spell = getSpell();
         Spell savedSpell = getSpell();
@@ -94,7 +95,7 @@ public class SpellServiceImplTest {
         when(spellRepositoryMock.save(spell)).thenReturn(savedSpell);
         when(spellMapperMock.spellToSpellDTO(savedSpell)).thenReturn(spellDto);
 
-        SpellDTO result = spellService.createSpell(spellDto);
+        SpellDTO result = underTest.createSpell(spellDto);
 
         assertNotNull(result);
         assertEquals(spellDto, result);
@@ -106,19 +107,16 @@ public class SpellServiceImplTest {
 
     @Test
     void updateSpell_shouldReturnSpellDTO_whenFound() {
-        Spell existingSpell = getExistingSpell();
-
-        SpellDTO updateDto = new SpellDTO(null, "New Name", "New Level", "New CastingTime", "New Range", false, false, false, "New Materials", "New Duration", false, false, "New School", "New Description");
-
+        Spell existingSpell = getOldSpell();
+        SpellDTO updateDto = getNewSpellDTO(1L);
         Spell updatedSpell = getUpdatedSpell();
-
-        SpellDTO updatedDto = new SpellDTO(1L, "New Name", "New Level", "New CastingTime", "New Range", false, false, false, "New Materials", "New Duration", false, false, "New School", "New Description");
+        SpellDTO updatedDto = getOldSpellDTO(1L);
 
         when(spellRepositoryMock.findById(1L)).thenReturn(Optional.of(existingSpell));
         when(spellRepositoryMock.save(existingSpell)).thenReturn(updatedSpell);
         when(spellMapperMock.spellToSpellDTO(updatedSpell)).thenReturn(updatedDto);
 
-        SpellDTO result = spellService.updateSpell(1L, updateDto);
+        SpellDTO result = underTest.updateSpell(1L, updateDto);
 
         assertNotNull(result);
         assertEquals(updatedDto, result);
@@ -130,11 +128,10 @@ public class SpellServiceImplTest {
 
     @Test
     void updateSpell_shouldThrowException_whenNotFound() {
-        SpellDTO updateDto = new SpellDTO(null, "New Name", "New Level", "New CastingTime", "New Range", false, false, false, "New Materials", "New Duration", false, false, "New School", "New Description");
+        SpellDTO updateDto = getNewSpellDTO(1L);
 
         when(spellRepositoryMock.findById(1L)).thenReturn(Optional.empty());
-
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> spellService.updateSpell(1L, updateDto));
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> underTest.updateSpell(1L, updateDto));
 
         assertEquals("Spell not found", exception.getMessage());
 
@@ -145,8 +142,7 @@ public class SpellServiceImplTest {
 
     @Test
     void deleteSpell_shouldCallRepositoryDeleteById() {
-        spellService.deleteSpell(1L);
-
+        underTest.deleteSpell(1L);
         verify(spellRepositoryMock).deleteById(1L);
     }
 
@@ -154,135 +150,38 @@ public class SpellServiceImplTest {
     @Test
     @DisplayName("getAllByNameContainingIgnoreCase() should return matching SpellDTOs")
     void getAllByNameContainingIgnoreCase_shouldReturnMatchingSpellDTOs() {
-        SpellRepository spellRepository = mock(SpellRepository.class);
-        SpellMapper spellMapper = mock(SpellMapper.class);
+        Spell spell1 = getSpell(1L);
+        Spell spell2 = getSpell(2L);
 
-        spellService = new SpellServiceImpl(spellRepository, spellClassRepositoryMock, spellMapper);
+        SpellDTO spellDto1 = getSpellDTO(1L);
+        SpellDTO spellDto2 = getSpellDTO(2L);
 
-        Spell spell1 = new Spell(
-                "Test Name 1",
-                "Test Level 1",
-                "Test CastingTime 1",
-                "Test RangeArea 1",
-                false,
-                false,
-                false,
-                "Test ComponentMaterials 1",
-                "Test Duration 1",
-                false,
-                false,
-                "Test School 1",
-                "Test Description 1"
-        );
-
-        Spell spell2 = new Spell(
-                "Test Name 2",
-                "Test Level 2",
-                "Test CastingTime 2",
-                "Test RangeArea 2",
-                false,
-                false,
-                false,
-                "Test ComponentMaterials 2",
-                "Test Duration 2",
-                false,
-                false,
-                "Test School 2",
-                "Test Description 2"
-        );
-
-        SpellDTO spellDto1 = new SpellDTO();
-        spellDto1.setId(1L);
-        spellDto1.setName("Test Name 1");
-        spellDto1.setLevel("Test Level 1");
-        spellDto1.setCastingTime("Test CastingTime 1");
-        spellDto1.setRangeArea("Test RangeArea 1");
-        spellDto1.setComponentVisual(false);
-        spellDto1.setComponentSemantic(false);
-        spellDto1.setComponentMaterial(false);
-        spellDto1.setComponentMaterials("Test ComponentMaterials 1");
-        spellDto1.setDuration("Test Duration 1");
-        spellDto1.setConcentration(false);
-        spellDto1.setRitual(false);
-        spellDto1.setSchool("Test School 1");
-        spellDto1.setDescription("Test Description 1");
-
-        SpellDTO spellDto2 = new SpellDTO();
-        spellDto2.setId(2L);
-        spellDto2.setName("Test Name 2");
-        spellDto2.setLevel("Test Level 2");
-        spellDto2.setCastingTime("Test CastingTime 2");
-        spellDto2.setRangeArea("Test RangeArea 2");
-        spellDto2.setComponentVisual(false);
-        spellDto2.setComponentSemantic(false);
-        spellDto2.setComponentMaterial(false);
-        spellDto2.setComponentMaterials("Test ComponentMaterials 2");
-        spellDto2.setDuration("Test Duration 2");
-        spellDto2.setConcentration(false);
-        spellDto2.setRitual(false);
-        spellDto2.setSchool("Test School 2");
-        spellDto2.setDescription("Test Description 2");
-
-        when(spellRepository.findAllByNameContainingIgnoreCase("Test"))
+        when(spellRepositoryMock.findAllByNameContainingIgnoreCase("Test"))
                 .thenReturn(List.of(spell1, spell2));
-        when(spellMapper.spellToSpellDTO(spell1)).thenReturn(spellDto1);
-        when(spellMapper.spellToSpellDTO(spell2)).thenReturn(spellDto2);
+        when(spellMapperMock.spellToSpellDTO(spell1)).thenReturn(spellDto1);
+        when(spellMapperMock.spellToSpellDTO(spell2)).thenReturn(spellDto2);
 
-        List<SpellDTO> results = spellService.getAllByNameContainingIgnoreCase("Test");
+        List<SpellDTO> results = underTest.getAllByNameContainingIgnoreCase("Test");
 
         assertNotNull(results);
         assertEquals(2, results.size());
 
-        assertEquals("Test Name 1", results.get(0).getName());
-        assertEquals("Test Level 1", results.get(0).getLevel());
+        assertEquals("Test Spell Name 1", results.get(0).getName());
+        assertEquals("Test Level", results.get(0).getLevel());
 
-        assertEquals("Test Name 2", results.get(1).getName());
-        assertEquals("Test Level 2", results.get(1).getLevel());
+        assertEquals("Test Spell Name 2", results.get(1).getName());
+        assertEquals("Test Level", results.get(1).getLevel());
 
-        verify(spellRepository).findAllByNameContainingIgnoreCase("Test");
-        verify(spellMapper).spellToSpellDTO(spell1);
-        verify(spellMapper).spellToSpellDTO(spell2);
+        verify(spellRepositoryMock).findAllByNameContainingIgnoreCase("Test");
+        verify(spellMapperMock).spellToSpellDTO(spell1);
+        verify(spellMapperMock).spellToSpellDTO(spell2);
     }
 
     @Test
-    @DisplayName("getAllByRpgClassId() should return matching Spells")
-    void getAllByRpgClassNameContainingIgnoreCase_shouldReturnMatchingSpells(){
-        SpellRepository spellRepository = mock(SpellRepository.class);
-        SpellMapper spellMapper = mock(SpellMapper.class);
-
-        spellService = new SpellServiceImpl(spellRepository, spellClassRepositoryMock, spellMapper);
-
-        Spell spell1 = new Spell(
-                "Test Spell Name 1",
-                "Test Level 1",
-                "Test CastingTime 1",
-                "Test RangeArea 1",
-                false,
-                false,
-                false,
-                "Test ComponentMaterials 1",
-                "Test Duration 1",
-                false,
-                false,
-                "Test School 1",
-                "Test Description 1"
-        );
-
-        Spell spell2 = new Spell(
-                "Test Spell Name 2",
-                "Test Level 2",
-                "Test CastingTime 2",
-                "Test RangeArea 2",
-                false,
-                false,
-                false,
-                "Test ComponentMaterials 2",
-                "Test Duration 2",
-                false,
-                false,
-                "Test School 2",
-                "Test Description 2"
-        );
+    @DisplayName("getAllByRpgClassId() should return matching rpgClass name")
+    void getAllSpellsContainingIgnoreCase_shouldReturnMatchingRpgClassName(){
+        Spell spell1 = getSpell(1L);
+        Spell spell2 = getSpell(2L);
 
         RpgClass rpgClass = new RpgClass("Test Class", "Test SubClass", "Test Description");
 
@@ -296,25 +195,79 @@ public class SpellServiceImplTest {
         spellDto2.setName("Test Spell Name 2");
 
         when(spellClassRepositoryMock.findAllByRpgClass_NameContainingIgnoreCase("Test")).thenReturn(List.of(spellClass1, spellClass2));
-        when(spellMapper.spellToSpellDTO(spell1)).thenReturn(spellDto1);
-        when(spellMapper.spellToSpellDTO(spell2)).thenReturn(spellDto2);
+        when(spellMapperMock.spellToSpellDTO(spell1)).thenReturn(spellDto1);
+        when(spellMapperMock.spellToSpellDTO(spell2)).thenReturn(spellDto2);
 
-        List<SpellDTO> results = spellService.getAllByRpgClassNameContainingIgnoreCase("Test");
+        List<SpellDTO> results = underTest.getAllByRpgClassNameContainingIgnoreCase("Test");
 
         assertEquals(2, results.size());
         assertEquals("Test Spell Name 1", results.get(0).getName());
         assertEquals("Test Spell Name 2", results.get(1).getName());
 
         verify(spellClassRepositoryMock).findAllByRpgClass_NameContainingIgnoreCase("Test");
-        verify(spellMapper).spellToSpellDTO(spell1);
-        verify(spellMapper).spellToSpellDTO(spell2);
+        verify(spellMapperMock).spellToSpellDTO(spell1);
+        verify(spellMapperMock).spellToSpellDTO(spell2);
     }
 
-    /** SUPs */
+
+    @Test
+    @DisplayName("getAllBySourceId() should return matching source name")
+    void getAllSpellsContainingIgnoreCase_shouldReturnMatchingSourceName(){
+        Spell spell1 = getSpell(1L);
+        Spell spell2 = getSpell(2L);
+
+        Source source = new Source("Test Source Name", "Test Source SubClass", "Test Source Description");
+
+        SpellSource spellSource1 = new SpellSource(spell1, source, "pg 1");
+        SpellSource spellSource2 = new SpellSource(spell2, source, "pg 2");
+
+        SpellDTO spellDto1 = new SpellDTO();
+        spellDto1.setName("Test Spell Name 1");
+
+        SpellDTO spellDto2 = new SpellDTO();
+        spellDto2.setName("Test Spell Name 2");
+
+        when(spellSourceRepositoryMock.findAllBySource_NameContainingIgnoreCase("Test")).thenReturn(List.of(spellSource1, spellSource2));
+        when(spellMapperMock.spellToSpellDTO(spell1)).thenReturn(spellDto1);
+        when(spellMapperMock.spellToSpellDTO(spell2)).thenReturn(spellDto2);
+
+        List<SpellDTO> results = underTest.getAllBySourceNameContainingIgnoreCase("Test");
+
+        assertEquals(2, results.size());
+        assertEquals("Test Spell Name 1", results.get(0).getName());
+        assertEquals("Test Spell Name 2", results.get(1).getName());
+
+        verify(spellSourceRepositoryMock).findAllBySource_NameContainingIgnoreCase("Test");
+        verify(spellMapperMock).spellToSpellDTO(spell1);
+        verify(spellMapperMock).spellToSpellDTO(spell2);
+    }
+
+    /** ===============================================================================
+     * SUPs
+     * */
     private static @NonNull Spell getSpell() {
         Spell spell = new Spell();
         spell.setId(1L);
         spell.setName("Test Name");
+        spell.setLevel("Test Level");
+        spell.setCastingTime("Test CastingTime");
+        spell.setRangeArea("Test Range");
+        spell.setComponentVisual(false);
+        spell.setComponentSemantic(false);
+        spell.setComponentMaterial(false);
+        spell.setComponentMaterials("Test Materials");
+        spell.setDuration("Test Duration");
+        spell.setConcentration(false);
+        spell.setRitual(false);
+        spell.setSchool("Test School");
+        spell.setDescription("Test Description");
+        return spell;
+    }
+
+    private static @NonNull Spell getSpell(Long num) {
+        Spell spell = new Spell();
+        spell.setId(num);
+        spell.setName("Test Name " +  num);
         spell.setLevel("Test Level");
         spell.setCastingTime("Test CastingTime");
         spell.setRangeArea("Test Range");
@@ -349,7 +302,7 @@ public class SpellServiceImplTest {
         return updatedSpell;
     }
 
-    private static @NonNull Spell getExistingSpell() {
+    private static @NonNull Spell getOldSpell() {
         Spell existingSpell = new Spell();
         existingSpell.setId(1L);
         existingSpell.setName("Old Name");
@@ -366,5 +319,62 @@ public class SpellServiceImplTest {
         existingSpell.setSchool("Old School");
         existingSpell.setDescription("Old Description");
         return existingSpell;
+    }
+
+    private static @NonNull SpellDTO getSpellDTO(Long num) {
+        SpellDTO spellDto = new SpellDTO();
+        spellDto.setId(num);
+        spellDto.setName("Test Spell Name " + num);
+        spellDto.setLevel("Test Level");
+        spellDto.setCastingTime("Test CastingTime");
+        spellDto.setRangeArea("Test Range");
+        spellDto.setComponentVisual(false);
+        spellDto.setComponentSemantic(false);
+        spellDto.setComponentMaterial(false);
+        spellDto.setComponentMaterials("Test Materials");
+        spellDto.setDuration("Test Duration");
+        spellDto.setConcentration(false);
+        spellDto.setRitual(false);
+        spellDto.setSchool("Test School");
+        spellDto.setDescription("Test Description");
+        return spellDto;
+    }
+
+    private static @NonNull SpellDTO getNewSpellDTO(Long num) {
+        SpellDTO spellDto = new SpellDTO();
+        spellDto.setId(num);
+        spellDto.setName("New Name");
+        spellDto.setLevel("New Level");
+        spellDto.setCastingTime("New CastingTime");
+        spellDto.setRangeArea("New Range");
+        spellDto.setComponentVisual(false);
+        spellDto.setComponentSemantic(false);
+        spellDto.setComponentMaterial(false);
+        spellDto.setComponentMaterials("New Materials");
+        spellDto.setDuration("New Duration");
+        spellDto.setConcentration(false);
+        spellDto.setRitual(false);
+        spellDto.setSchool("New School");
+        spellDto.setDescription("New Description");
+        return spellDto;
+    }
+
+    private static @NonNull SpellDTO getOldSpellDTO(Long num) {
+        SpellDTO spellDto = new SpellDTO();
+        spellDto.setId(num);
+        spellDto.setName("Old Name");
+        spellDto.setLevel("Old Level");
+        spellDto.setCastingTime("Old CastingTime");
+        spellDto.setRangeArea("Old Range");
+        spellDto.setComponentVisual(false);
+        spellDto.setComponentSemantic(false);
+        spellDto.setComponentMaterial(false);
+        spellDto.setComponentMaterials("Old Materials");
+        spellDto.setDuration("Old Duration");
+        spellDto.setConcentration(false);
+        spellDto.setRitual(false);
+        spellDto.setSchool("Old School");
+        spellDto.setDescription("Old Description");
+        return spellDto;
     }
 }
