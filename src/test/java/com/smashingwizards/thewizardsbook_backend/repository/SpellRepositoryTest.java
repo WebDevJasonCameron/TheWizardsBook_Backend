@@ -25,7 +25,15 @@ public class SpellRepositoryTest {
     @Autowired
     private SpellSourceRepository spellSourceRepository;
     @Autowired
+    private SpellTagRepository spellTagRepository;
+    @Autowired
+    private SpellTtrpgRepository spellTtrpgRepository;
+    @Autowired
     private SourceRepository sourceRepository;
+    @Autowired
+    private TagRepository tagRepository;
+    @Autowired
+    private TtrpgRepository ttrpgRepository;
     @Autowired
     private SpellRepository underTest;
 
@@ -176,6 +184,59 @@ public class SpellRepositoryTest {
         assertTrue(results.stream().anyMatch(sc -> sc.getSpell().getName().equals("Test Spell Name 2")));
     }
 
+    @Test
+    @DisplayName("findAllByTag_NameContainingIgnoreCase() should return spell classes matching tag name")
+    void findAllByTagTagNameContainingIgnoreCase_shouldReturnMatchingTagName() {
+        Spell spell1 = underTest.save(getSpell(1L));
+        Spell spell2 = underTest.save(getSpell(2L));
+        Spell spell3 = underTest.save(getSpell());
+
+        Tag tag1 = tagRepository.save(
+                new Tag("Test Tag 1", "Test Description 1")
+        );
+
+        Tag tag2 = tagRepository.save(
+                new Tag("Test Tag 2", "Test Description 2")
+        );
+
+        spellTagRepository.save(new SpellTag(spell1, tag1));
+        spellTagRepository.save(new SpellTag(spell2, tag1));
+        spellTagRepository.save(new SpellTag(spell3, tag2));
+
+        List<SpellTag> results =
+                spellTagRepository.findAllByTag_NameContainingIgnoreCase("Test Tag 1");
+
+        assertEquals(2, results.size());
+        assertTrue(results.stream().anyMatch(sc -> sc.getSpell().getName().equals("Test Spell Name 1")));
+        assertTrue(results.stream().anyMatch(sc -> sc.getSpell().getName().equals("Test Spell Name 2")));
+    }
+
+    @Test
+    @DisplayName("findAllByTtrpg_NameContainingIgnoreCase() should return spell classes matching ttrpg name")
+    void findAllByTagTtrpgNameContainingIgnoreCase_shouldReturnMatchingTtrpgName() {
+        Spell spell1 = underTest.save(getSpell(1L));
+        Spell spell2 = underTest.save(getSpell(2L));
+        Spell spell3 = underTest.save(getSpell());
+
+        Ttrpg ttrpg1 = ttrpgRepository.save(
+                new Ttrpg("Test Ttrpg 1", "Test Description")
+        );
+
+        Ttrpg ttrpg2 = ttrpgRepository.save(
+                new Ttrpg("Test Ttrpg 2", "Test Description")
+        );
+
+        spellTtrpgRepository.save(new SpellTtrpg(spell1, ttrpg1));
+        spellTtrpgRepository.save(new SpellTtrpg(spell2, ttrpg1));
+        spellTtrpgRepository.save(new SpellTtrpg(spell3, ttrpg2));
+
+        List<SpellTtrpg> results =
+                spellTtrpgRepository.findAllByTtrpg_NameContainingIgnoreCase("Test Ttrpg 1");
+
+        assertEquals(2, results.size());
+        assertTrue(results.stream().anyMatch(sc -> sc.getSpell().getName().equals("Test Spell Name 1")));
+        assertTrue(results.stream().anyMatch(sc -> sc.getSpell().getName().equals("Test Spell Name 2")));
+    }
 
     /** SUPs */
     private static @NonNull Spell getSpell(Long num) {

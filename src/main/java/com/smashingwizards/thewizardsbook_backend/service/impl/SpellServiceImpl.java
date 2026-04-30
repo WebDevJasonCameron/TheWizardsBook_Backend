@@ -2,12 +2,8 @@ package com.smashingwizards.thewizardsbook_backend.service.impl;
 
 import com.smashingwizards.thewizardsbook_backend.dto.SpellDTO;
 import com.smashingwizards.thewizardsbook_backend.mapper.SpellMapper;
-import com.smashingwizards.thewizardsbook_backend.model.Spell;
-import com.smashingwizards.thewizardsbook_backend.model.SpellClass;
-import com.smashingwizards.thewizardsbook_backend.model.SpellSource;
-import com.smashingwizards.thewizardsbook_backend.repository.SpellClassRepository;
-import com.smashingwizards.thewizardsbook_backend.repository.SpellRepository;
-import com.smashingwizards.thewizardsbook_backend.repository.SpellSourceRepository;
+import com.smashingwizards.thewizardsbook_backend.model.*;
+import com.smashingwizards.thewizardsbook_backend.repository.*;
 import com.smashingwizards.thewizardsbook_backend.service.SpellService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,13 +18,17 @@ public class SpellServiceImpl implements SpellService {
     private SpellRepository spellRepository;
     private final SpellClassRepository spellClassRepository;
     private final SpellSourceRepository spellSourceRepository;
+    private final SpellTagRepository spellTagRepository;
+    private final SpellTtrpgRepository spellTtrpgRepository;
     public SpellMapper spellMapper;
 
     // CONs
-    public SpellServiceImpl(SpellRepository spellRepository, SpellClassRepository spellClassRepository, SpellSourceRepository spellSourceRepository, SpellMapper spellMapper) {
+    public SpellServiceImpl(SpellRepository spellRepository, SpellClassRepository spellClassRepository, SpellSourceRepository spellSourceRepository, SpellTagRepository spellTagRepository,  SpellTtrpgRepository spellTtrpgRepository, SpellMapper spellMapper) {
         this.spellRepository = spellRepository;
         this.spellClassRepository = spellClassRepository;
         this.spellSourceRepository = spellSourceRepository;
+        this.spellTagRepository = spellTagRepository;
+        this.spellTtrpgRepository = spellTtrpgRepository;
         this.spellMapper = spellMapper;
     }
 
@@ -108,6 +108,24 @@ public class SpellServiceImpl implements SpellService {
         return spellSourceRepository.findAllBySource_NameContainingIgnoreCase(name)
                 .stream()
                 .map(SpellSource::getSpell)
+                .map(spellMapper::spellToSpellDTO)
+                .toList();
+    }
+
+    @Override
+    public List<SpellDTO> getAllByTagNameContainingIgnoreCase(String name) {
+        return spellTagRepository.findAllByTag_NameContainingIgnoreCase(name)
+                .stream()
+                .map(SpellTag::getSpell)
+                .map(spellMapper::spellToSpellDTO)
+                .toList();
+    }
+
+    @Override
+    public List<SpellDTO> getAllByTtrpgNameContainingIgnoreCase(String name) {
+        return spellTtrpgRepository.findAllByTtrpg_NameContainingIgnoreCase(name)
+                .stream()
+                .map(SpellTtrpg::getSpell)
                 .map(spellMapper::spellToSpellDTO)
                 .toList();
     }

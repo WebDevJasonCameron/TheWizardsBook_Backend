@@ -3,9 +3,7 @@ package com.smashingwizards.thewizardsbook_backend.service.impl;
 import com.smashingwizards.thewizardsbook_backend.dto.SpellDTO;
 import com.smashingwizards.thewizardsbook_backend.mapper.SpellMapper;
 import com.smashingwizards.thewizardsbook_backend.model.*;
-import com.smashingwizards.thewizardsbook_backend.repository.SpellClassRepository;
-import com.smashingwizards.thewizardsbook_backend.repository.SpellRepository;
-import com.smashingwizards.thewizardsbook_backend.repository.SpellSourceRepository;
+import com.smashingwizards.thewizardsbook_backend.repository.*;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,6 +29,10 @@ public class SpellServiceImplTest {
     private SpellClassRepository spellClassRepositoryMock;
     @Mock
     private SpellSourceRepository spellSourceRepositoryMock;
+    @Mock
+    private SpellTagRepository spellTagRepositoryMock;
+    @Mock
+    private SpellTtrpgRepository spellTtrpgRepositoryMock;
 
     @InjectMocks
     private SpellServiceImpl underTest;
@@ -241,6 +243,71 @@ public class SpellServiceImplTest {
         verify(spellMapperMock).spellToSpellDTO(spell1);
         verify(spellMapperMock).spellToSpellDTO(spell2);
     }
+
+    @Test
+    @DisplayName("getAllByTagId() should return matching tag name")
+    void getAllSpellsContainingIgnoreCase_shouldReturnMatchingTagName(){
+        Spell spell1 = getSpell(1L);
+        Spell spell2 = getSpell(2L);
+
+        Tag tag = new Tag("Test Tag Name", "Test Tag Description");
+
+        SpellTag spellTag1 = new SpellTag(spell1, tag);
+        SpellTag spellTag2 = new SpellTag(spell2, tag);
+
+        SpellDTO spellDto1 = new SpellDTO();
+        spellDto1.setName("Test Spell Name 1");
+
+        SpellDTO spellDto2 = new SpellDTO();
+        spellDto2.setName("Test Spell Name 2");
+
+        when(spellTagRepositoryMock.findAllByTag_NameContainingIgnoreCase("Test")).thenReturn(List.of(spellTag1, spellTag2));
+        when(spellMapperMock.spellToSpellDTO(spell1)).thenReturn(spellDto1);
+        when(spellMapperMock.spellToSpellDTO(spell2)).thenReturn(spellDto2);
+
+        List<SpellDTO> results = underTest.getAllByTagNameContainingIgnoreCase("Test");
+
+        assertEquals(2, results.size());
+        assertEquals("Test Spell Name 1", results.get(0).getName());
+        assertEquals("Test Spell Name 2", results.get(1).getName());
+
+        verify(spellTagRepositoryMock).findAllByTag_NameContainingIgnoreCase("Test");
+        verify(spellMapperMock).spellToSpellDTO(spell1);
+        verify(spellMapperMock).spellToSpellDTO(spell2);
+    }
+
+    @Test
+    @DisplayName("getAllByTtrpgId() should return matching ttrpg name")
+    void getAllSpellsContainingIgnoreCase_shouldReturnMatchingTtrpgName(){
+        Spell spell1 = getSpell(1L);
+        Spell spell2 = getSpell(2L);
+
+        Ttrpg ttrpg = new Ttrpg("Test Ttrpg Name", "Test Ttrpg Description");
+
+        SpellTtrpg spellTtrpg1 = new SpellTtrpg(spell1, ttrpg);
+        SpellTtrpg spellTtrpg2 = new SpellTtrpg(spell2, ttrpg);
+
+        SpellDTO spellDto1 = new SpellDTO();
+        spellDto1.setName("Test Spell Name 1");
+
+        SpellDTO spellDto2 = new SpellDTO();
+        spellDto2.setName("Test Spell Name 2");
+
+        when(spellTtrpgRepositoryMock.findAllByTtrpg_NameContainingIgnoreCase("Test")).thenReturn(List.of(spellTtrpg1, spellTtrpg2));
+        when(spellMapperMock.spellToSpellDTO(spell1)).thenReturn(spellDto1);
+        when(spellMapperMock.spellToSpellDTO(spell2)).thenReturn(spellDto2);
+
+        List<SpellDTO> results = underTest.getAllByTtrpgNameContainingIgnoreCase("Test");
+
+        assertEquals(2, results.size());
+        assertEquals("Test Spell Name 1", results.get(0).getName());
+        assertEquals("Test Spell Name 2", results.get(1).getName());
+
+        verify(spellTtrpgRepositoryMock).findAllByTtrpg_NameContainingIgnoreCase("Test");
+        verify(spellMapperMock).spellToSpellDTO(spell1);
+        verify(spellMapperMock).spellToSpellDTO(spell2);
+    }
+
 
     /** ===============================================================================
      * SUPs

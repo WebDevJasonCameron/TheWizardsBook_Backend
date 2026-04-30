@@ -282,6 +282,44 @@ public class SpellControllerTest {
                 .andExpect(jsonPath("$[1].name").value("Test Spell Name 2"));
     }
 
+    @Test
+    @DisplayName("GET /api/spells/search/by-tag?name=test should return matching tag name")
+    void getAllSpellsContainingIgnorCase_shouldReturnMatchingTagName() throws Exception {
+        SpellDTO spellDto1 = getSpellDTO(1L);
+        SpellDTO spellDto2 = getSpellDTO(2L);
+
+        when(spellService.getAllByTagNameContainingIgnoreCase(eq("Test"))).thenReturn(List.of(spellDto1, spellDto2));
+
+        mockMvc.perform(get("/api/spells/search/by-tag")
+                        .param("name", "Test"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].id").value(1L))
+                .andExpect(jsonPath("$[0].name").value("Test Spell Name 1"))
+                .andExpect(jsonPath("$[1].id").value(2L))
+                .andExpect(jsonPath("$[1].name").value("Test Spell Name 2"));
+    }
+
+    @Test
+    @DisplayName("GET /api/spells/search/by-ttrpg?name=test should return matching ttrpg name")
+    void getAllSpellsContainingIgnorCase_shouldReturnMatchingTtrpgName() throws Exception {
+        SpellDTO spellDto1 = getSpellDTO(1L);
+        SpellDTO spellDto2 = getSpellDTO(2L);
+
+        when(spellService.getAllByTtrpgNameContainingIgnoreCase(eq("Test"))).thenReturn(List.of(spellDto1, spellDto2));
+
+        mockMvc.perform(get("/api/spells/search/by-ttrpg")
+                        .param("name", "Test"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].id").value(1L))
+                .andExpect(jsonPath("$[0].name").value("Test Spell Name 1"))
+                .andExpect(jsonPath("$[1].id").value(2L))
+                .andExpect(jsonPath("$[1].name").value("Test Spell Name 2"));
+    }
+
     /** SUPs */
     private static @NonNull Spell getSpell() {
         Spell spell = new Spell();

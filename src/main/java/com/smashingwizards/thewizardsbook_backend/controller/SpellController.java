@@ -62,4 +62,14 @@ public class SpellController {
         return ResponseEntity.ok(spellService.getAllBySourceNameContainingIgnoreCase(name));
     }
 
+    @GetMapping("/search/by-tag")
+    public ResponseEntity<List<SpellDTO>> getAllByTagNameContainingIgnoreCase(@RequestParam String name) {
+        return ResponseEntity.ok(spellService.getAllByTagNameContainingIgnoreCase(name));
+    }
+
+    @GetMapping("/search/by-ttrpg")
+    public ResponseEntity<List<SpellDTO>> getAllByTtrpgNameContainingIgnoreCase(@RequestParam String name) {
+        return ResponseEntity.ok(spellService.getAllByTtrpgNameContainingIgnoreCase(name));
+    }
+
 }
