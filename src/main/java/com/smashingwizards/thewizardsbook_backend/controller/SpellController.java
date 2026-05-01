@@ -1,6 +1,7 @@
 package com.smashingwizards.thewizardsbook_backend.controller;
 
 import com.smashingwizards.thewizardsbook_backend.dto.SpellDTO;
+import com.smashingwizards.thewizardsbook_backend.dto.SpellDetailsDTO;
 import com.smashingwizards.thewizardsbook_backend.service.SpellService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,6 +71,11 @@ public class SpellController {
     @GetMapping("/search/by-ttrpg")
     public ResponseEntity<List<SpellDTO>> getAllByTtrpgNameContainingIgnoreCase(@RequestParam String name) {
         return ResponseEntity.ok(spellService.getAllByTtrpgNameContainingIgnoreCase(name));
+    }
+
+    @GetMapping("/{id}/details")
+    public ResponseEntity<SpellDetailsDTO> getSpellDetailsById(@PathVariable Long id) {
+        return ResponseEntity.ok(spellService.getSpellDetailsById(id));
     }
 
 }

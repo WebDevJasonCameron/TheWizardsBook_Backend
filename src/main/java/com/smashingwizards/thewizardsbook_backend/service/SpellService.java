@@ -1,6 +1,7 @@
 package com.smashingwizards.thewizardsbook_backend.service;
 
 import com.smashingwizards.thewizardsbook_backend.dto.SpellDTO;
+import com.smashingwizards.thewizardsbook_backend.dto.SpellDetailsDTO;
 
 import java.util.List;
 
@@ -17,4 +18,7 @@ public interface SpellService {
     List<SpellDTO> getAllBySourceNameContainingIgnoreCase(String name);
     List<SpellDTO> getAllByTagNameContainingIgnoreCase(String name);
     List<SpellDTO> getAllByTtrpgNameContainingIgnoreCase(String name);
+
+    SpellDetailsDTO getSpellDetailsById(Long id);
+
 }

@@ -1,7 +1,7 @@
 package com.smashingwizards.thewizardsbook_backend.service.impl;
 
-import com.smashingwizards.thewizardsbook_backend.dto.SpellDTO;
-import com.smashingwizards.thewizardsbook_backend.mapper.SpellMapper;
+import com.smashingwizards.thewizardsbook_backend.dto.*;
+import com.smashingwizards.thewizardsbook_backend.mapper.*;
 import com.smashingwizards.thewizardsbook_backend.model.*;
 import com.smashingwizards.thewizardsbook_backend.repository.*;
 import org.jspecify.annotations.NonNull;
@@ -33,6 +33,14 @@ public class SpellServiceImplTest {
     private SpellTagRepository spellTagRepositoryMock;
     @Mock
     private SpellTtrpgRepository spellTtrpgRepositoryMock;
+    @Mock
+    private RpgClassMapper rpgClassMapperMock;
+    @Mock
+    private TagMapper tagMapperMock;
+    @Mock
+    private SourceMapper sourceMapperMock;
+    @Mock
+    private TtrpgMapper ttrpgMapperMock;
 
     @InjectMocks
     private SpellServiceImpl underTest;
@@ -306,6 +314,107 @@ public class SpellServiceImplTest {
         verify(spellTtrpgRepositoryMock).findAllByTtrpg_NameContainingIgnoreCase("Test");
         verify(spellMapperMock).spellToSpellDTO(spell1);
         verify(spellMapperMock).spellToSpellDTO(spell2);
+    }
+
+    @Test
+    @DisplayName("getSpellDetailsById() should return spell details")
+    void getSpellDetailsById_shouldReturnSpellWithClassesTagsSourcesAndTtrpgs() {
+        // Spell
+        Spell spell = new Spell();
+        spell.setId(1L);
+        spell.setName("Spell Name");
+
+        SpellDTO spellDTO = new SpellDTO();
+        spellDTO.setId(1L);
+        spellDTO.setName("Spell Name");
+
+        // Class
+        RpgClass wizard = new RpgClass();
+        wizard.setId(1L);
+        wizard.setName("Class Name");
+
+        SpellClass spellClass = new SpellClass();
+        spellClass.setId(1L);
+        spellClass.setSpell(spell);
+        spellClass.setRpgClass(wizard);
+
+        // Tag
+        Tag tag = new Tag();
+        tag.setId(1L);
+        tag.setName("Tag Name");
+
+        SpellTag spellTag = new SpellTag();
+        spellTag.setId(1L);
+        spellTag.setSpell(spell);
+        spellTag.setTag(tag);
+
+        // Source
+        Source source = new Source();
+        source.setId(1L);
+        source.setName("Source Name");
+
+        SpellSource spellSource = new SpellSource();
+        spellSource.setId(1L);
+        spellSource.setSpell(spell);
+        spellSource.setSource(source);
+        spellSource.setPage("pg 1");
+
+        // TTRPG
+        Ttrpg ttrpg = new Ttrpg();
+        ttrpg.setId(1L);
+        ttrpg.setName("Ttrpg Name");
+
+        SpellTtrpg spellTtrpg = new SpellTtrpg();
+        spellTtrpg.setId(1L);
+        spellTtrpg.setSpell(spell);
+        spellTtrpg.setTtrpg(ttrpg);
+
+        // Mocks
+        when(spellRepositoryMock.findById(1L))
+                .thenReturn(Optional.of(spell));
+
+        when(spellMapperMock.spellToSpellDTO(spell))
+                .thenReturn(spellDTO);
+
+        when(spellClassRepositoryMock.findAllBySpellId(1L))
+                .thenReturn(List.of(spellClass));
+
+        when(spellTagRepositoryMock.findAllBySpellId(1L))
+                .thenReturn(List.of(spellTag));
+
+        when(spellSourceRepositoryMock.findAllBySpellId(1L))
+                .thenReturn(List.of(spellSource));
+
+        when(spellTtrpgRepositoryMock.findAllBySpellId(1L))
+                .thenReturn(List.of(spellTtrpg));
+
+        // Act
+        SpellDetailsDTO result = underTest.getSpellDetailsById(1L);
+
+        // Assert
+        assertNotNull(result);
+
+        RpgClassDTO rpgClassDTO = new RpgClassDTO();
+        rpgClassDTO.setId(1L);
+        rpgClassDTO.setName("Class Name");
+
+        TagDTO tagDTO = new TagDTO();
+        tagDTO.setId(1L);
+        tagDTO.setName("Tag Name");
+
+        SourceDTO sourceDTO = new SourceDTO();
+        sourceDTO.setId(1L);
+        sourceDTO.setName("Source Name");
+
+        TtrpgDTO ttrpgDTO = new TtrpgDTO();
+        ttrpgDTO.setId(1L);
+        ttrpgDTO.setName("Ttrpg Name");
+
+        // Verify
+        when(rpgClassMapperMock.rpgClassToRpgClassDTO(wizard)).thenReturn(rpgClassDTO);
+        when(tagMapperMock.tagToTagDTO(tag)).thenReturn(tagDTO);
+        when(sourceMapperMock.sourceToSourceDTO(source)).thenReturn(sourceDTO);
+        when(ttrpgMapperMock.ttrpgToTtrpgDTO(ttrpg)).thenReturn(ttrpgDTO);
     }
 
 

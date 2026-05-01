@@ -13,4 +13,5 @@ public interface SpellClassRepository extends JpaRepository<SpellClass, Long> {
 
     /** ADDs */
     List<SpellClass> findAllByRpgClass_NameContainingIgnoreCase(String name);
+    List<SpellClass> findAllBySpellId(Long spellId);
 }

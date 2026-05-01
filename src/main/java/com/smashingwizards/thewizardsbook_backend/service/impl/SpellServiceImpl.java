@@ -1,7 +1,8 @@
 package com.smashingwizards.thewizardsbook_backend.service.impl;
 
 import com.smashingwizards.thewizardsbook_backend.dto.SpellDTO;
-import com.smashingwizards.thewizardsbook_backend.mapper.SpellMapper;
+import com.smashingwizards.thewizardsbook_backend.dto.SpellDetailsDTO;
+import com.smashingwizards.thewizardsbook_backend.mapper.*;
 import com.smashingwizards.thewizardsbook_backend.model.*;
 import com.smashingwizards.thewizardsbook_backend.repository.*;
 import com.smashingwizards.thewizardsbook_backend.service.SpellService;
@@ -20,15 +21,23 @@ public class SpellServiceImpl implements SpellService {
     private final SpellSourceRepository spellSourceRepository;
     private final SpellTagRepository spellTagRepository;
     private final SpellTtrpgRepository spellTtrpgRepository;
+    private final RpgClassMapper rpgClassMapper;
+    private final TagMapper tagMapper;
+    private final SourceMapper sourceMapper;
+    private final TtrpgMapper ttrpgMapper;
     public SpellMapper spellMapper;
 
     // CONs
-    public SpellServiceImpl(SpellRepository spellRepository, SpellClassRepository spellClassRepository, SpellSourceRepository spellSourceRepository, SpellTagRepository spellTagRepository,  SpellTtrpgRepository spellTtrpgRepository, SpellMapper spellMapper) {
+    public SpellServiceImpl(SpellRepository spellRepository, SpellClassRepository spellClassRepository, SpellSourceRepository spellSourceRepository, SpellTagRepository spellTagRepository,  SpellTtrpgRepository spellTtrpgRepository, RpgClassMapper rpgClassMapper, TagMapper tagMapper, SourceMapper sourceMapper, TtrpgMapper ttrpgMapper, SpellMapper spellMapper) {
         this.spellRepository = spellRepository;
         this.spellClassRepository = spellClassRepository;
         this.spellSourceRepository = spellSourceRepository;
         this.spellTagRepository = spellTagRepository;
         this.spellTtrpgRepository = spellTtrpgRepository;
+        this.rpgClassMapper = rpgClassMapper;
+        this.tagMapper = tagMapper;
+        this.sourceMapper = sourceMapper;
+        this.ttrpgMapper = ttrpgMapper;
         this.spellMapper = spellMapper;
     }
 
@@ -128,6 +137,49 @@ public class SpellServiceImpl implements SpellService {
                 .map(SpellTtrpg::getSpell)
                 .map(spellMapper::spellToSpellDTO)
                 .toList();
+    }
+
+    @Override
+    public SpellDetailsDTO getSpellDetailsById(Long id) {
+        Spell spell = spellRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Spell not found"));
+
+        SpellDetailsDTO dto = new SpellDetailsDTO();
+
+        dto.setSpell(spellMapper.spellToSpellDTO(spell));
+
+        dto.setRpgClasses(
+                spellClassRepository.findAllBySpellId(id)
+                        .stream()
+                        .map(SpellClass::getRpgClass)
+                        .map(rpgClassMapper::rpgClassToRpgClassDTO)
+                        .toList()
+        );
+
+        dto.setTags(
+                spellTagRepository.findAllBySpellId(id)
+                        .stream()
+                        .map(SpellTag::getTag)
+                        .map(tagMapper::tagToTagDTO)
+                        .toList()
+        );
+
+        dto.setSources(
+                spellSourceRepository.findAllBySpellId(id)
+                        .stream()
+                        .map(SpellSource::getSource)
+                        .map(sourceMapper::sourceToSourceDTO)
+                        .toList()
+        );
+
+        dto.setTtrpgs(
+                spellTtrpgRepository.findAllBySpellId(id)
+                        .stream()
+                        .map(SpellTtrpg::getTtrpg)
+                        .map(ttrpgMapper::ttrpgToTtrpgDTO)
+                        .toList()
+        );
+        return dto;
     }
 
 }

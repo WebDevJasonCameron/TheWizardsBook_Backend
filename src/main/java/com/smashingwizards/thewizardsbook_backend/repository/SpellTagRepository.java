@@ -1,5 +1,6 @@
 package com.smashingwizards.thewizardsbook_backend.repository;
 
+import com.smashingwizards.thewizardsbook_backend.model.SpellClass;
 import com.smashingwizards.thewizardsbook_backend.model.SpellSource;
 import com.smashingwizards.thewizardsbook_backend.model.SpellTag;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,7 @@ public interface SpellTagRepository extends JpaRepository<SpellTag, Long> {
 
     /** ADDs */
     List<SpellTag> findAllByTag_NameContainingIgnoreCase(String name);
+
+    List<SpellTag> findAllBySpellId(Long spellId);
+
 }

@@ -7,10 +7,8 @@ public class SpellClassDTO {
 
     @Getter @Setter
     private Long id;
-
     @Getter @Setter
     private Long spellId;
-
     @Getter @Setter
     private Long rpgClassId;
 
