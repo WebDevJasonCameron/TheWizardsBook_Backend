@@ -182,4 +182,35 @@ public class SpellServiceImpl implements SpellService {
         return dto;
     }
 
+    @Override
+    public List<SpellDTO> searchSpells(
+            String name,
+            List<Long> ttrpgIds,
+            List<Long> classIds,
+            List<String> levels
+    ) {
+        String cleanedName = (name == null || name.isBlank()) ? null : name.trim();
+
+        boolean ttrpgIdsEmpty = ttrpgIds == null || ttrpgIds.isEmpty();
+        boolean classIdsEmpty = classIds == null || classIds.isEmpty();
+        boolean levelsEmpty = levels == null || levels.isEmpty();
+
+        List<Long> safeTtrpgIds = ttrpgIdsEmpty ? List.of(-1L) : ttrpgIds;
+        List<Long> safeClassIds = classIdsEmpty ? List.of(-1L) : classIds;
+        List<String> safeLevels = levelsEmpty ? List.of("__NONE__") : levels;
+
+        return spellRepository.searchSpells(
+                        cleanedName,
+                        safeLevels,
+                        levelsEmpty,
+                        safeClassIds,
+                        classIdsEmpty,
+                        safeTtrpgIds,
+                        ttrpgIdsEmpty
+                )
+                .stream()
+                .map(spellMapper::spellToSpellDTO)
+                .toList();
+    }
+
 }

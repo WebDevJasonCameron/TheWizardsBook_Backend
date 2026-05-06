@@ -21,4 +21,10 @@ public interface SpellService {
 
     SpellDetailsDTO getSpellDetailsById(Long id);
 
+    List<SpellDTO> searchSpells(
+            String name,
+            List<Long> ttrpgIds,
+            List<Long> classIds,
+            List<String> levels
+    );
 }

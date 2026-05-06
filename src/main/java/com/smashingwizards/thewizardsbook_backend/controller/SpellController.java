@@ -49,8 +49,15 @@ public class SpellController {
 
     /** ADDs */
     @GetMapping("/search")
-    public ResponseEntity<List<SpellDTO>> getAllByNameContainingIgnoreCase(@RequestParam String name) {
-        return ResponseEntity.ok(spellService.getAllByNameContainingIgnoreCase(name));
+    public ResponseEntity<List<SpellDTO>> searchSpells(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) List<Long> ttrpgIds,
+            @RequestParam(required = false) List<Long> classIds,
+            @RequestParam(required = false) List<String> levels
+    ) {
+        return ResponseEntity.ok(
+                spellService.searchSpells(name, ttrpgIds, classIds, levels)
+        );
     }
 
     @GetMapping("/search/by-rpg-class")
