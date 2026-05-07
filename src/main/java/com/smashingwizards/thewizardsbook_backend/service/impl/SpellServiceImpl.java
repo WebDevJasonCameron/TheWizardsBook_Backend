@@ -200,24 +200,59 @@ public class SpellServiceImpl implements SpellService {
 
         boolean levelsEmpty = levels == null || levels.isEmpty();
         boolean concentrationEmpty = concentration == null || concentration.describeConstable().isEmpty();
-        // <!> Cont here <!>
-
+        boolean ritualEmpty = ritual == null || ritual.describeConstable().isEmpty();
+        boolean componentVisualEmpty = componentVisual == null || componentVisual.describeConstable().isEmpty();
+        boolean componentSemanticEmpty = componentSemantic == null || componentSemantic.describeConstable().isEmpty();
+        boolean componentMaterialEmpty = componentMaterial == null || componentMaterial.describeConstable().isEmpty();
         boolean ttrpgIdsEmpty = ttrpgIds == null || ttrpgIds.isEmpty();
         boolean classIdsEmpty = classIds == null || classIds.isEmpty();
+        boolean sourceIdsEmpty = sourceIds == null || sourceIds.isEmpty();
+        boolean tagIdsEmpty = tagIds == null || tagIds.isEmpty();
 
-
+        List<String> safeLevels = levelsEmpty ? List.of("__NONE__") : levels;
+        List<Boolean> safeConcentration = concentrationEmpty ? List.of(false) : List.of(concentration);
+        List<Boolean> safeRitual = ritualEmpty ? List.of(false) : List.of(ritual);
+        List<Boolean> safeComponentVisual = componentVisualEmpty ? List.of(false) : List.of(componentVisual);
+        List<Boolean> safeComponentSemantic = componentSemanticEmpty ? List.of(false) : List.of(componentSemantic);
+        List<Boolean> safeComponentMaterial = componentMaterialEmpty ? List.of(false) : List.of(componentMaterial);
         List<Long> safeTtrpgIds = ttrpgIdsEmpty ? List.of(-1L) : ttrpgIds;
         List<Long> safeClassIds = classIdsEmpty ? List.of(-1L) : classIds;
-        List<String> safeLevels = levelsEmpty ? List.of("__NONE__") : levels;
+        List<Long> safeSourceIds = sourceIdsEmpty ? List.of(-1L) : sourceIds;
+        List<Long> safeTagIds = tagIdsEmpty ? List.of(-1L) : tagIds;
 
         return spellRepository.searchSpells(
                         cleanedName,
+
                         safeLevels,
                         levelsEmpty,
-                        safeClassIds,
+
+                        ritual,
+                        safeRitual,
+
+                        componentVisual,
+                        safeComponentVisual,
+
+                        componentSemantic,
+                        safeComponentSemantic,
+
+                        componentMaterial,
+                        safeComponentMaterial,
+
+                        concentration,
+                        safeConcentration,
+
                         classIdsEmpty,
+                        safeClassIds,
+
+                        ttrpgIdsEmpty,
                         safeTtrpgIds,
-                        ttrpgIdsEmpty
+
+                        sourceIds,
+                        safeSourceIds,
+
+                        tagIds,
+                        safeTagIds
+
                 )
                 .stream()
                 .map(spellMapper::spellToSpellDTO)
