@@ -51,12 +51,31 @@ public class SpellController {
     @GetMapping("/search")
     public ResponseEntity<List<SpellDTO>> searchSpells(
             @RequestParam(required = false) String name,
+            @RequestParam(required = false) List<String> levels,
+            @RequestParam(required = false) Boolean concentration,
+            @RequestParam(required = false) Boolean ritual,
+            @RequestParam(required = false) Boolean componentVisual,
+            @RequestParam(required = false) Boolean componentSemantic,
+            @RequestParam(required = false) Boolean componentMaterial,
             @RequestParam(required = false) List<Long> ttrpgIds,
             @RequestParam(required = false) List<Long> classIds,
-            @RequestParam(required = false) List<String> levels
+            @RequestParam(required = false) List<Long> sourceIds,
+            @RequestParam(required = false) List<Long> tagIds
     ) {
         return ResponseEntity.ok(
-                spellService.searchSpells(name, ttrpgIds, classIds, levels)
+                spellService.searchSpells(
+                        name,
+                        levels,
+                        concentration,
+                        ritual,
+                        componentVisual,
+                        componentSemantic,
+                        componentMaterial,
+                        ttrpgIds,
+                        classIds,
+                        sourceIds,
+                        tagIds
+                )
         );
     }
 

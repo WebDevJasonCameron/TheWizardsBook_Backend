@@ -23,8 +23,15 @@ public interface SpellService {
 
     List<SpellDTO> searchSpells(
             String name,
+            List<String> levels,
+            Boolean concentration,
+            Boolean ritual,
+            Boolean componentVisual,
+            Boolean componentSemantic,
+            Boolean componentMaterial,
             List<Long> ttrpgIds,
             List<Long> classIds,
-            List<String> levels
+            List<Long> sourceIds,
+            List<Long> tagIds
     );
 }

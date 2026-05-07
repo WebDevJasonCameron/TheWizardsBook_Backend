@@ -185,15 +185,26 @@ public class SpellServiceImpl implements SpellService {
     @Override
     public List<SpellDTO> searchSpells(
             String name,
+            List<String> levels,
+            Boolean concentration,
+            Boolean ritual,
+            Boolean componentVisual,
+            Boolean componentSemantic,
+            Boolean componentMaterial,
             List<Long> ttrpgIds,
             List<Long> classIds,
-            List<String> levels
+            List<Long> sourceIds,
+            List<Long> tagIds
     ) {
         String cleanedName = (name == null || name.isBlank()) ? null : name.trim();
 
+        boolean levelsEmpty = levels == null || levels.isEmpty();
+        boolean concentrationEmpty = concentration == null || concentration.describeConstable().isEmpty();
+        // <!> Cont here <!>
+
         boolean ttrpgIdsEmpty = ttrpgIds == null || ttrpgIds.isEmpty();
         boolean classIdsEmpty = classIds == null || classIds.isEmpty();
-        boolean levelsEmpty = levels == null || levels.isEmpty();
+
 
         List<Long> safeTtrpgIds = ttrpgIdsEmpty ? List.of(-1L) : ttrpgIds;
         List<Long> safeClassIds = classIdsEmpty ? List.of(-1L) : classIds;
