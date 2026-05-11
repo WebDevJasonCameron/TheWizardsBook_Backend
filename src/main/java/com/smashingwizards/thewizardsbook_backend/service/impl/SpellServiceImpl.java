@@ -198,16 +198,16 @@ public class SpellServiceImpl implements SpellService {
     ) {
         String cleanedName = (name == null || name.isBlank()) ? null : name.trim();
 
-        boolean levelsEmpty = levels == null || levels.isEmpty();
-        boolean concentrationEmpty = concentration == null || concentration.describeConstable().isEmpty();
-        boolean ritualEmpty = ritual == null || ritual.describeConstable().isEmpty();
-        boolean componentVisualEmpty = componentVisual == null || componentVisual.describeConstable().isEmpty();
-        boolean componentSemanticEmpty = componentSemantic == null || componentSemantic.describeConstable().isEmpty();
-        boolean componentMaterialEmpty = componentMaterial == null || componentMaterial.describeConstable().isEmpty();
-        boolean ttrpgIdsEmpty = ttrpgIds == null || ttrpgIds.isEmpty();
-        boolean classIdsEmpty = classIds == null || classIds.isEmpty();
-        boolean sourceIdsEmpty = sourceIds == null || sourceIds.isEmpty();
-        boolean tagIdsEmpty = tagIds == null || tagIds.isEmpty();
+        boolean levelsEmpty = levels == null;
+        boolean concentrationEmpty = concentration == null;
+        boolean ritualEmpty = ritual == null;
+        boolean componentVisualEmpty = componentVisual == null;
+        boolean componentSemanticEmpty = componentSemantic == null;
+        boolean componentMaterialEmpty = componentMaterial == null;
+        boolean ttrpgIdsEmpty = ttrpgIds == null;
+        boolean classIdsEmpty = classIds == null;
+        boolean sourceIdsEmpty = sourceIds == null;
+        boolean tagIdsEmpty = tagIds == null;
 
         List<String> safeLevels = levelsEmpty ? List.of("__NONE__") : levels;
         List<Boolean> safeConcentration = concentrationEmpty ? List.of(false) : List.of(concentration);
@@ -226,33 +226,32 @@ public class SpellServiceImpl implements SpellService {
                         safeLevels,
                         levelsEmpty,
 
+                        concentration,
+                        concentrationEmpty,
+
                         ritual,
-                        safeRitual,
+                        ritualEmpty,
 
                         componentVisual,
-                        safeComponentVisual,
+                        componentVisualEmpty,
 
                         componentSemantic,
-                        safeComponentSemantic,
+                        componentSemanticEmpty,
 
                         componentMaterial,
-                        safeComponentMaterial,
+                        componentMaterialEmpty,
 
-                        concentration,
-                        safeConcentration,
-
-                        classIdsEmpty,
                         safeClassIds,
+                        classIdsEmpty,
 
-                        ttrpgIdsEmpty,
                         safeTtrpgIds,
+                        ttrpgIdsEmpty,
 
-                        sourceIds,
                         safeSourceIds,
+                        sourceIdsEmpty,
 
-                        tagIds,
-                        safeTagIds
-
+                        safeTagIds,
+                        tagIdsEmpty
                 )
                 .stream()
                 .map(spellMapper::spellToSpellDTO)

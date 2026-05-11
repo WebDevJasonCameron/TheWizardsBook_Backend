@@ -37,6 +37,7 @@ public class SpellRepositoryTest {
     @Autowired
     private SpellRepository underTest;
 
+
     @Test
     @DisplayName("Repository loads successfully")
     void testRepositoryLoads() {
@@ -236,6 +237,108 @@ public class SpellRepositoryTest {
         assertEquals(2, results.size());
         assertTrue(results.stream().anyMatch(sc -> sc.getSpell().getName().equals("Test Spell Name 1")));
         assertTrue(results.stream().anyMatch(sc -> sc.getSpell().getName().equals("Test Spell Name 2")));
+    }
+
+    @Test
+    @DisplayName("searchSpells() should filter by name")
+    void searchSpells_shouldFilterByName() {
+        Spell spell1 = getSpell(1L);
+        Spell spell2 = getSpell(2L);
+
+        underTest.save(spell1);
+        underTest.save(spell2);
+
+        List<Spell> result = underTest.searchSpells(
+                "Test Spell Name 1",
+
+                List.of("__NONE__"),
+                true,
+
+                /** Rule:
+                 * true: ignore filter
+                 * false: apply filter
+                 * */
+
+                null,
+                true,
+
+                null,
+                true,
+
+                null,
+                true,
+
+                null,
+                true,
+
+                null,
+                true,
+
+                List.of(-1L),
+                true,
+
+                List.of(-1L),
+                true,
+
+                List.of(-1L),
+                true,
+
+                List.of(-1L),
+                true
+        );
+
+        assertEquals(1, result.size());
+        assertEquals("Test Spell Name 1", result.get(0).getName());
+    }
+
+    @Test
+    @DisplayName("searchSpells() should filter by tagIds")
+    void searchSpells_shouldFilterByTagIds() {
+        Spell spell_1 = underTest.save(getSpell(1L));
+        Spell spell_2 = underTest.save(getSpell(2L));
+
+        Tag tag_1 = tagRepository.save(new Tag("Test Tag Name 1", "test tag type 1"));
+        Tag tag_2 = tagRepository.save(new Tag("Test Tag Name 2", "test tag type 2"));
+
+        spellTagRepository.save(new SpellTag(spell_1, tag_1));
+        spellTagRepository.save(new SpellTag(spell_2, tag_2));
+
+        List<Spell> result = underTest.searchSpells(
+                null,
+
+                List.of("__NONE__"),
+                true,
+
+                null,
+                true,
+
+                null,
+                true,
+
+                null,
+                true,
+
+                null,
+                true,
+
+                null,
+                true,
+
+                List.of(-1L),
+                true,
+
+                List.of(-1L),
+                true,
+
+                List.of(-1L),
+                true,
+
+                List.of(tag_1.getId()),
+                false
+        );
+
+        assertEquals(1, result.size());
+        assertEquals(spell_1.getId(), result.get(0).getId());
     }
 
     /** SUPs */
