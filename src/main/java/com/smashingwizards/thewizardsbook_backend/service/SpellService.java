@@ -13,14 +13,15 @@ public interface SpellService {
     void deleteSpell(Long id);
 
     /** ADDs */
+    /** GETs */
     List<SpellDTO> getAllByNameContainingIgnoreCase(String name);
     List<SpellDTO> getAllByRpgClassNameContainingIgnoreCase(String name);
     List<SpellDTO> getAllBySourceNameContainingIgnoreCase(String name);
     List<SpellDTO> getAllByTagNameContainingIgnoreCase(String name);
     List<SpellDTO> getAllByTtrpgNameContainingIgnoreCase(String name);
-
     SpellDetailsDTO getSpellDetailsById(Long id);
 
+    /** SEARCHes */
     List<SpellDTO> searchSpells(
             String name,
             List<String> levels,
@@ -34,4 +35,7 @@ public interface SpellService {
             List<Long> sourceIds,
             List<Long> tagIds
     );
+
+    /** CREATEs */
+    SpellDTO createSpellWithDetails(CreateSpellRequestDTO request);
 }
