@@ -1,7 +1,6 @@
 package com.smashingwizards.thewizardsbook_backend.service.impl;
 
-import com.smashingwizards.thewizardsbook_backend.dto.SpellDTO;
-import com.smashingwizards.thewizardsbook_backend.dto.SpellDetailsDTO;
+import com.smashingwizards.thewizardsbook_backend.dto.*;
 import com.smashingwizards.thewizardsbook_backend.mapper.*;
 import com.smashingwizards.thewizardsbook_backend.model.*;
 import com.smashingwizards.thewizardsbook_backend.repository.*;
@@ -11,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class SpellServiceImpl implements SpellService {
@@ -21,6 +19,12 @@ public class SpellServiceImpl implements SpellService {
     private final SpellSourceRepository spellSourceRepository;
     private final SpellTagRepository spellTagRepository;
     private final SpellTtrpgRepository spellTtrpgRepository;
+
+    private final RpgClassRepository rpgClassRepository;
+    private final TagRepository tagRepository;
+    private final SourceRepository sourceRepository;
+    private final TtrpgRepository ttrpgRepository;
+
     private final RpgClassMapper rpgClassMapper;
     private final TagMapper tagMapper;
     private final SourceMapper sourceMapper;
@@ -28,12 +32,17 @@ public class SpellServiceImpl implements SpellService {
     public SpellMapper spellMapper;
 
     // CONs
-    public SpellServiceImpl(SpellRepository spellRepository, SpellClassRepository spellClassRepository, SpellSourceRepository spellSourceRepository, SpellTagRepository spellTagRepository,  SpellTtrpgRepository spellTtrpgRepository, RpgClassMapper rpgClassMapper, TagMapper tagMapper, SourceMapper sourceMapper, TtrpgMapper ttrpgMapper, SpellMapper spellMapper) {
+    public SpellServiceImpl(SpellRepository spellRepository, SpellClassRepository spellClassRepository, SpellSourceRepository spellSourceRepository, SpellTagRepository spellTagRepository,  SpellTtrpgRepository spellTtrpgRepository, RpgClassRepository rpgClassRepository, TagRepository tagRepository, SourceRepository sourceRepository, TtrpgRepository ttrpgRepository, RpgClassMapper rpgClassMapper, TagMapper tagMapper, SourceMapper sourceMapper, TtrpgMapper ttrpgMapper, SpellMapper spellMapper) {
         this.spellRepository = spellRepository;
         this.spellClassRepository = spellClassRepository;
         this.spellSourceRepository = spellSourceRepository;
         this.spellTagRepository = spellTagRepository;
         this.spellTtrpgRepository = spellTtrpgRepository;
+        this.rpgClassRepository = rpgClassRepository;
+        this.tagRepository = tagRepository;
+        this.sourceRepository = sourceRepository;
+        this.ttrpgRepository = ttrpgRepository;
+
         this.rpgClassMapper = rpgClassMapper;
         this.tagMapper = tagMapper;
         this.sourceMapper = sourceMapper;
@@ -222,34 +231,24 @@ public class SpellServiceImpl implements SpellService {
 
         return spellRepository.searchSpells(
                         cleanedName,
-
                         safeLevels,
                         levelsEmpty,
-
                         concentration,
                         concentrationEmpty,
-
                         ritual,
                         ritualEmpty,
-
                         componentVisual,
                         componentVisualEmpty,
-
                         componentSemantic,
                         componentSemanticEmpty,
-
                         componentMaterial,
                         componentMaterialEmpty,
-
                         safeClassIds,
                         classIdsEmpty,
-
                         safeTtrpgIds,
                         ttrpgIdsEmpty,
-
                         safeSourceIds,
                         sourceIdsEmpty,
-
                         safeTagIds,
                         tagIdsEmpty
                 )
@@ -258,4 +257,35 @@ public class SpellServiceImpl implements SpellService {
                 .toList();
     }
 
+    @Override
+    @Transactional
+    public SpellDetailsDTO createSpellWithDetails(CreateSpellRequestDTO createSpellRequestDTO) {
+        Spell spell = spellMapper.spellDTOToSpell(createSpellRequestDTO.getSpell());
+        Spell savedSpell = spellRepository.save(spell);
+
+        for (Long classId : createSpellRequestDTO.getRpgClassIds()) {
+            RpgClass rpgClass = rpgClassRepository.getReferenceById(classId);
+            spellClassRepository.save(new SpellClass(savedSpell, rpgClass));
+        }
+
+        for (Long tagId : createSpellRequestDTO.getTagIds()) {
+            Tag tag = tagRepository.getReferenceById(tagId);
+            spellTagRepository.save(new SpellTag(savedSpell, tag));
+        }
+
+        for (SourceAssignmentDTO sourceAssignment : createSpellRequestDTO.getSources()) {
+            Source source = sourceRepository.getReferenceById(sourceAssignment.getSourceId());
+
+            spellSourceRepository.save(
+                    new SpellSource(savedSpell, source, sourceAssignment.getPage())
+            );
+        }
+
+        for (Long ttrpgId : createSpellRequestDTO.getTtrpgIds()) {
+            Ttrpg ttrpg = ttrpgRepository.getReferenceById(ttrpgId);
+            spellTtrpgRepository.save(new SpellTtrpg(savedSpell, ttrpg));
+        }
+
+        return getSpellDetailsById(savedSpell.getId());
+    }
 }
