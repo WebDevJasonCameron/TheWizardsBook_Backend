@@ -1,5 +1,6 @@
 package com.smashingwizards.thewizardsbook_backend.controller;
 
+import com.smashingwizards.thewizardsbook_backend.dto.CreateSpellRequestDTO;
 import com.smashingwizards.thewizardsbook_backend.dto.SpellDTO;
 import com.smashingwizards.thewizardsbook_backend.dto.SpellDetailsDTO;
 import com.smashingwizards.thewizardsbook_backend.service.SpellService;
@@ -48,6 +49,7 @@ public class SpellController {
     }
 
     /** ADDs */
+    /** SEARCHes */
     @GetMapping("/search")
     public ResponseEntity<List<SpellDTO>> searchSpells(
             @RequestParam(required = false) String name,
@@ -102,6 +104,18 @@ public class SpellController {
     @GetMapping("/{id}/details")
     public ResponseEntity<SpellDetailsDTO> getSpellDetailsById(@PathVariable Long id) {
         return ResponseEntity.ok(spellService.getSpellDetailsById(id));
+    }
+
+    /** CREATEs */
+    @PostMapping("/with-details")
+    public ResponseEntity<SpellDetailsDTO> createSpellWithDetails(
+            @RequestBody CreateSpellRequestDTO createSpellRequestDTO
+    ) {
+        SpellDetailsDTO createdSpell = spellService.createSpellWithDetails(createSpellRequestDTO);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(createdSpell);
     }
 
 }
