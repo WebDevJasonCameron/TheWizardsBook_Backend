@@ -3,37 +3,23 @@ package com.smashingwizards.thewizardsbook_backend.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter @Setter
 public class SpellDTO {
 
-    @Getter @Setter
     private Long id;
-    @Getter @Setter
     private String name;
-    @Getter @Setter
     private String level;
-    @Getter @Setter
     private String castingTime;
-    @Getter @Setter
     private String rangeArea;
-    @Getter @Setter
     private boolean componentVisual;
-    @Getter @Setter
     private boolean componentSemantic;
-    @Getter @Setter
     private boolean componentMaterial;
-    @Getter @Setter
     private String componentMaterials;
-    @Getter @Setter
     private String duration;
-    @Getter @Setter
     private boolean concentration;
-    @Getter @Setter
     private boolean ritual;
-    @Getter @Setter
     private String school;
-    @Getter @Setter
     private String description;
-    @Getter @Setter
     private Long sourceId;
 
     // CONs

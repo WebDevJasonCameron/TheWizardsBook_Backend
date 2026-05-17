@@ -5,21 +5,13 @@ import lombok.Setter;
 
 import java.time.Instant;
 
+@Getter @Setter
 public class ImageUrlDTO {
 
-    @Getter @Setter
     private Long id;
-
-    @Getter @Setter
     private String url;
-
-    @Getter @Setter
     private String type;
-
-    @Getter @Setter
     private String hash;
-
-    @Getter @Setter
     private Instant createdAt;
 
     // CONs

@@ -3,15 +3,12 @@ package com.smashingwizards.thewizardsbook_backend.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
+@Setter
 public class ConditionDTO {
 
-    @Getter @Setter
     private Long id;
-
-    @Getter @Setter
     private String name;
-
-    @Getter @Setter
     private String description;
 
     // CONs

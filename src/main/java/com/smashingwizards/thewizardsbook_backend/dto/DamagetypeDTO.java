@@ -1,14 +1,13 @@
 package com.smashingwizards.thewizardsbook_backend.dto;
 
-import com.smashingwizards.thewizardsbook_backend.model.Damagetype;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter @Setter
+
 public class DamagetypeDTO {
 
-    @Getter @Setter
     private Long id;
-    @Getter @Setter
     private String name;
 
     // CONs

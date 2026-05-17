@@ -3,18 +3,12 @@ package com.smashingwizards.thewizardsbook_backend.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter @Setter
 public class SpellSourceDTO {
 
-    @Getter @Setter
     private Long id;
-
-    @Getter @Setter
     private Long spellId;
-
-    @Getter @Setter
     private Long sourceId;
-
-    @Getter @Setter
     private String page;
 
     // CONs

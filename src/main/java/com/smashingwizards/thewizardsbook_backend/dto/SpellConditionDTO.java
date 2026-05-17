@@ -3,15 +3,11 @@ package com.smashingwizards.thewizardsbook_backend.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter @Setter
 public class SpellConditionDTO {
 
-    @Getter @Setter
     private Long id;
-
-    @Getter @Setter
     private Long spellId;
-
-    @Getter @Setter
     private Long conditionId;
 
     // CONs

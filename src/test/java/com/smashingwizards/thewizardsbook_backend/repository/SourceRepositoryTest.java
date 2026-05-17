@@ -1,8 +1,6 @@
 package com.smashingwizards.thewizardsbook_backend.repository;
 
-import com.smashingwizards.thewizardsbook_backend.dto.SourceDTO;
 import com.smashingwizards.thewizardsbook_backend.model.Source;
-import com.smashingwizards.thewizardsbook_backend.service.SourceService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,15 +10,12 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @DataJpaTest
 public class SourceRepositoryTest {
 
     @Autowired
     private SourceRepository underTest;
-    @Autowired
-    private SourceService sourceService;
 
     @Test
     @DisplayName("Repository loads successfully")

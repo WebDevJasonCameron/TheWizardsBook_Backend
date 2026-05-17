@@ -304,6 +304,85 @@ public class SpellControllerTest {
                 .andExpect(jsonPath("$[1].name").value("Test Spell Name 2"));
     }
 
+    @Test
+    @DisplayName("POST /api/spells/with-details should create spell with relationships")
+    void createSpellWithDetails_shouldCreateSpellWithRelationships() throws Exception {
+        String requestBody = """
+            {
+              "spell": {
+                "name": "Fireball",
+                "level": "3",
+                "castingTime": "1 action",
+                "rangeArea": "150 feet",
+                "componentVisual": true,
+                "componentSemantic": true,
+                "componentMaterial": true,
+                "componentMaterials": "A tiny ball of bat guano and sulfur",
+                "duration": "Instantaneous",
+                "concentration": false,
+                "ritual": false,
+                "school": "Evocation",
+                "description": "A bright streak flashes from your pointing finger..."
+              },
+              "rpgClassIds": [1],
+              "tagIds": [2, 5],
+              "sources": [
+                {
+                  "sourceId": 1,
+                  "page": "pg. 241"
+                }
+              ],
+              "ttrpgIds": [1]
+            }
+            """;
+
+        SpellDTO spellDTO = new SpellDTO();
+        spellDTO.setId(1L);
+        spellDTO.setName("Fireball");
+        spellDTO.setLevel("3");
+
+        RpgClassDTO rpgClassDTO = new RpgClassDTO();
+        rpgClassDTO.setId(1L);
+        rpgClassDTO.setName("Wizard");
+
+        TagDTO tagDTO = new TagDTO();
+        tagDTO.setId(2L);
+        tagDTO.setName("Damage");
+
+        SourceDTO sourceDTO = new SourceDTO();
+        sourceDTO.setId(1L);
+        sourceDTO.setName("Player Handbook");
+
+        TtrpgDTO ttrpgDTO = new TtrpgDTO();
+        ttrpgDTO.setId(1L);
+        ttrpgDTO.setName("Dungeons & Dragons 5.5");
+
+        SpellDetailsDTO responseDTO = new SpellDetailsDTO();
+        responseDTO.setSpell(spellDTO);
+        responseDTO.setRpgClasses(List.of(rpgClassDTO));
+        responseDTO.setTags(List.of(tagDTO));
+        responseDTO.setSources(List.of(sourceDTO));
+        responseDTO.setTtrpgs(List.of(ttrpgDTO));
+
+        when(spellService.createSpellWithDetails(any(CreateSpellRequestDTO.class)))
+                .thenReturn(responseDTO);
+
+        mockMvc.perform(post("/api/spells/with-details")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.spell.id").value(1))
+                .andExpect(jsonPath("$.spell.name").value("Fireball"))
+                .andExpect(jsonPath("$.spell.level").value("3"))
+                .andExpect(jsonPath("$.rpgClasses[0].name").value("Wizard"))
+                .andExpect(jsonPath("$.tags[0].name").value("Damage"))
+                .andExpect(jsonPath("$.sources[0].name").value("Player Handbook"))
+                .andExpect(jsonPath("$.ttrpgs[0].name").value("Dungeons & Dragons 5.5"));
+
+        verify(spellService).createSpellWithDetails(any(CreateSpellRequestDTO.class));
+    }
+
     /** SUPs */
     private static @NonNull Spell getSpell() {
         Spell spell = new Spell();
@@ -398,84 +477,5 @@ public class SpellControllerTest {
         spellDto.setSchool("Old School");
         spellDto.setDescription("Old Description");
         return spellDto;
-    }
-
-    @Test
-    @DisplayName("POST /api/spells/with-details should create spell with relationships")
-    void createSpellWithDetails_shouldCreateSpellWithRelationships() throws Exception {
-        String requestBody = """
-            {
-              "spell": {
-                "name": "Fireball",
-                "level": "3",
-                "castingTime": "1 action",
-                "rangeArea": "150 feet",
-                "componentVisual": true,
-                "componentSemantic": true,
-                "componentMaterial": true,
-                "componentMaterials": "A tiny ball of bat guano and sulfur",
-                "duration": "Instantaneous",
-                "concentration": false,
-                "ritual": false,
-                "school": "Evocation",
-                "description": "A bright streak flashes from your pointing finger..."
-              },
-              "rpgClassIds": [1],
-              "tagIds": [2, 5],
-              "sources": [
-                {
-                  "sourceId": 1,
-                  "page": "pg. 241"
-                }
-              ],
-              "ttrpgIds": [1]
-            }
-            """;
-
-        SpellDTO spellDTO = new SpellDTO();
-        spellDTO.setId(1L);
-        spellDTO.setName("Fireball");
-        spellDTO.setLevel("3");
-
-        RpgClassDTO rpgClassDTO = new RpgClassDTO();
-        rpgClassDTO.setId(1L);
-        rpgClassDTO.setName("Wizard");
-
-        TagDTO tagDTO = new TagDTO();
-        tagDTO.setId(2L);
-        tagDTO.setName("Damage");
-
-        SourceDTO sourceDTO = new SourceDTO();
-        sourceDTO.setId(1L);
-        sourceDTO.setName("Player Handbook");
-
-        TtrpgDTO ttrpgDTO = new TtrpgDTO();
-        ttrpgDTO.setId(1L);
-        ttrpgDTO.setName("Dungeons & Dragons 5.5");
-
-        SpellDetailsDTO responseDTO = new SpellDetailsDTO();
-        responseDTO.setSpell(spellDTO);
-        responseDTO.setRpgClasses(List.of(rpgClassDTO));
-        responseDTO.setTags(List.of(tagDTO));
-        responseDTO.setSources(List.of(sourceDTO));
-        responseDTO.setTtrpgs(List.of(ttrpgDTO));
-
-        when(spellService.createSpellWithDetails(any(CreateSpellRequestDTO.class)))
-                .thenReturn(responseDTO);
-
-        mockMvc.perform(post("/api/spells/with-details")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
-                .andExpect(status().isCreated())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.spell.id").value(1))
-                .andExpect(jsonPath("$.spell.name").value("Fireball"))
-                .andExpect(jsonPath("$.spell.level").value("3"))
-                .andExpect(jsonPath("$.rpgClasses[0].name").value("Wizard"))
-                .andExpect(jsonPath("$.tags[0].name").value("Damage"))
-                .andExpect(jsonPath("$.sources[0].name").value("Player Handbook"))
-                .andExpect(jsonPath("$.ttrpgs[0].name").value("Dungeons & Dragons 5.5"));
-
-        verify(spellService).createSpellWithDetails(any(CreateSpellRequestDTO.class));
     }
 }

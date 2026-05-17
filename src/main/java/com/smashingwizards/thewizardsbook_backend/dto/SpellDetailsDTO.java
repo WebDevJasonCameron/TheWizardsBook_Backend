@@ -5,17 +5,13 @@ import lombok.Setter;
 
 import java.util.List;
 
+@Getter @Setter
 public class SpellDetailsDTO {
 
-    @Getter @Setter
     private SpellDTO spell;
-    @Getter @Setter
     private List<RpgClassDTO> rpgClasses;
-    @Getter @Setter
     private List<TagDTO> tags;
-    @Getter @Setter
     private List<SourceDTO> sources;
-    @Getter @Setter
     private List<TtrpgDTO> ttrpgs;
 
     // CONs
