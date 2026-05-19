@@ -8,27 +8,23 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter @Setter
 @Table(name = "image_urls")
 public class ImageUrl {
 
     @Id
-    @Getter @Setter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Getter @Setter
     @Column(name = "image_url")
     private String url;
 
-    @Getter @Setter
     @Column(name = "image_type")
     private String type;
 
-    @Getter @Setter
     @Column(name = "image_hash")
     private String hash;
 
-    @Getter @Setter
     @Column(name = "image_created_at")
     private Instant createdAt;
 

@@ -5,19 +5,18 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Getter @Setter
 @Table(name = "spell_tags")
 public class SpellTag {
 
-    @Id @Getter @Setter
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Getter @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "spells_spell_id", nullable = false)
     private Spell spell;
 
-    @Getter @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tags_tag_id", nullable = false)
     private Tag tag;

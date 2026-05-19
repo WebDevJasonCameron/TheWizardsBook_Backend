@@ -5,18 +5,17 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Getter @Setter
 @Table(name = "tags")
 public class Tag {
 
-    @Id @Getter @Setter
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Getter @Setter
     @Column(name = "tag_name")
     private String name;
 
-    @Getter @Setter
     @Column(name = "tag_type")
     private String type;
 

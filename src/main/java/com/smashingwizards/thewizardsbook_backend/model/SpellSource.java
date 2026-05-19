@@ -5,24 +5,22 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Getter @Setter
 @Table(name = "spell_sources")
 public class SpellSource {
 
-    @Id @Getter @Setter
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Getter @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "spells_spell_id", nullable = false)
     private Spell spell;
 
-    @Getter @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sources_source_id", nullable = false)
     private Source source;
 
-    @Getter @Setter
     @Column(name = "spell_source_page")
     private String page;
 

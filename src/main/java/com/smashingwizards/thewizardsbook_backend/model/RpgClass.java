@@ -5,22 +5,20 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Getter @Setter
 @Table(name = "rpg_classes")
 public class RpgClass {
 
-    @Id @Getter @Setter
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Getter @Setter
     @Column(name = "class_name")
     private String name;
 
-    @Getter @Setter
     @Column(name = "class_subclass_name")
     private String subClassName;
 
-    @Getter @Setter
     @Column(name = "class_description", columnDefinition = "TEXT")
     private String description;
 

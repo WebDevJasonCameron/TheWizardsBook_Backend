@@ -5,22 +5,20 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Getter @Setter
 @Table(name = "sources")
 public class Source {
 
-    @Id @Getter @Setter
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Getter @Setter
     @Column(name = "source_name")
     private String name;
 
-    @Getter @Setter
     @Column(name = "source_publish_date")
     private String publishDate;
 
-    @Getter @Setter
     @Column(name = "source_publisher")
     private String publisher;
 

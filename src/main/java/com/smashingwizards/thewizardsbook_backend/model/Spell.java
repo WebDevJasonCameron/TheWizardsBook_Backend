@@ -5,62 +5,50 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Getter @Setter
 @Table(name = "spells")
 public class Spell {
 
-    @Id @Getter @Setter
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Getter @Setter
     @Column(name = "spell_name")
     private String name;
 
-    @Getter @Setter
     @Column(name = "spell_level")
     private String level;
 
-    @Getter @Setter
     @Column(name = "spell_casting_time")
     private String castingTime;
 
-    @Getter @Setter
     @Column(name = "spell_range_area")
     private String rangeArea;
 
-    @Getter @Setter
     @Column(name = "spell_component_visual", nullable = false)
     private Boolean componentVisual;
 
-    @Getter @Setter
     @Column(name = "spell_component_semantic", nullable = false)
     private Boolean componentSemantic;
 
-    @Getter @Setter
     @Column(name = "spell_component_material", nullable = false)
     private Boolean componentMaterial;
 
-    @Getter @Setter
     @Column(name = "spell_component_materials")
     private String componentMaterials;
 
-    @Getter @Setter
     @Column(name = "spell_duration", columnDefinition = "TEXT")
     private String duration;
 
-    @Getter @Setter
     @Column(name = "spell_concentration", nullable = false)
     private Boolean concentration;
 
-    @Getter @Setter
     @Column(name = "spell_ritual", nullable = false)
     private Boolean ritual;
 
-    @Getter @Setter
     @Column(name = "spell_school")
     private String school;
 
-    @Getter @Setter
     @Column(name = "spell_description")
     private String description;
 

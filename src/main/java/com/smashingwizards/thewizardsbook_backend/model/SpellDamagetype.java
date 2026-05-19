@@ -5,19 +5,18 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Getter @Setter
 @Table(name = "spell_damagetypes")
 public class SpellDamagetype {
 
-    @Id @Getter @Setter
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Getter @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "spells_spell_id", nullable = false)
     private Spell spell;
 
-    @Getter @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "damagetypes_damagetype_id", nullable = false)
     private Damagetype damagetype;

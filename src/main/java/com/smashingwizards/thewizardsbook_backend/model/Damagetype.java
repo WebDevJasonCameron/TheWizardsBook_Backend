@@ -5,14 +5,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Setter @Getter
 @Table(name = "damagetypes")
 public class Damagetype {
 
-    @Setter @Getter @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Getter @Setter
     @Column(name = "damagetype_name")
     private String name;
 

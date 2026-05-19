@@ -5,19 +5,18 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Getter @Setter
 @Table(name = "spell_image_urls")
 public class SpellImageUrl {
 
-    @Id @Getter @Setter
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Getter @Setter
     @ManyToOne
     @JoinColumn(name = "spells_spell_id", nullable = false)
     private Spell spell;
 
-    @Getter @Setter
     @ManyToOne
     @JoinColumn(name = "image_urls_image_url_id", nullable = false)
     private ImageUrl imageUrl;

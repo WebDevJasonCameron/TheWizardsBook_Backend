@@ -5,18 +5,17 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Setter @Getter
 @Table(name = "conditions")
 public class Condition {
 
-    @Setter @Getter @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Getter @Setter
     @Column(name = "condition_name")
     private String name;
 
-    @Getter @Setter
     @Column(name = "condition_description", columnDefinition = "TEXT")
     private String description;
 

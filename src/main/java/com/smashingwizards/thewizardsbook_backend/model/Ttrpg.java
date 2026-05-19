@@ -5,18 +5,17 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Getter @Setter
 @Table(name = "ttrpgs")
 public class Ttrpg {
 
-    @Id @Getter @Setter
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Getter @Setter
     @Column(name = "ttrpg_name", nullable = false, unique = true)
     private String name;
 
-    @Getter @Setter
     @Column(name = "ttrpg_version", columnDefinition = "TEXT")
     private String version;
 

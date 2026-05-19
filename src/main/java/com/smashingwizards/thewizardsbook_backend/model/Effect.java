@@ -5,18 +5,17 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Getter @Setter
 @Table(name = "effects")
 public class Effect {
 
-    @Id @Getter @Setter
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Getter @Setter
     @Column(name = "effect_name")
     private String name;
 
-    @Getter @Setter
     @Column(name = "effect_sub_effect")
     private String subEffect;
 

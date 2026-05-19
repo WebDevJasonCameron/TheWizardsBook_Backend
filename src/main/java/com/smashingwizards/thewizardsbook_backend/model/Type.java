@@ -5,18 +5,17 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Getter @Setter
 @Table(name = "types")
 public class Type {
 
-    @Id @Getter @Setter
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Getter @Setter
     @Column(name = "type_name")
     private String name;
 
-    @Getter @Setter
     @Column(name = "type_sub_type")
     private String subType;
 
