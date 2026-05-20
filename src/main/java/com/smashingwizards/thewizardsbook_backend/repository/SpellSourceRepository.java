@@ -16,5 +16,7 @@ public interface SpellSourceRepository extends JpaRepository<SpellSource, Long> 
     List<SpellSource> findAllBySource_NameContainingIgnoreCase(String name);
 
     List<SpellSource> findAllBySpellId(Long spellId);
+    void deleteAllBySpellId(Long spellId);
+
 
 }

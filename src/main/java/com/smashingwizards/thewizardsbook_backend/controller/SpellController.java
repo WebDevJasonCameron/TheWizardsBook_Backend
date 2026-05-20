@@ -3,6 +3,7 @@ package com.smashingwizards.thewizardsbook_backend.controller;
 import com.smashingwizards.thewizardsbook_backend.dto.CreateSpellRequestDTO;
 import com.smashingwizards.thewizardsbook_backend.dto.SpellDTO;
 import com.smashingwizards.thewizardsbook_backend.dto.SpellDetailsDTO;
+import com.smashingwizards.thewizardsbook_backend.dto.UpdateSpellRequestDTO;
 import com.smashingwizards.thewizardsbook_backend.service.SpellService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -116,6 +117,17 @@ public class SpellController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(createdSpell);
+    }
+
+    /** UPDATEs */
+    @PutMapping("/{id}/with-details")
+    public ResponseEntity<SpellDetailsDTO> updateSpellWithDetails(
+            @PathVariable Long id,
+            @RequestBody UpdateSpellRequestDTO request
+    ) {
+        return ResponseEntity.ok(
+                spellService.updateSpellWithDetails(id, request)
+        );
     }
 
 }

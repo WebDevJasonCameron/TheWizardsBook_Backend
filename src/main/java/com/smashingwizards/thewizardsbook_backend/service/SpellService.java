@@ -3,6 +3,7 @@ package com.smashingwizards.thewizardsbook_backend.service;
 import com.smashingwizards.thewizardsbook_backend.dto.CreateSpellRequestDTO;
 import com.smashingwizards.thewizardsbook_backend.dto.SpellDTO;
 import com.smashingwizards.thewizardsbook_backend.dto.SpellDetailsDTO;
+import com.smashingwizards.thewizardsbook_backend.dto.UpdateSpellRequestDTO;
 
 import java.util.List;
 
@@ -39,4 +40,7 @@ public interface SpellService {
 
     /** CREATEs */
     SpellDetailsDTO createSpellWithDetails(CreateSpellRequestDTO request);
+
+    /** UPDATEs */
+    SpellDetailsDTO updateSpellWithDetails(Long spellId, UpdateSpellRequestDTO request);
 }

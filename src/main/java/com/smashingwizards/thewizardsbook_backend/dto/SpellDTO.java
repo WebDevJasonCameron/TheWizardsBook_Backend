@@ -11,13 +11,13 @@ public class SpellDTO {
     private String level;
     private String castingTime;
     private String rangeArea;
-    private boolean componentVisual;
-    private boolean componentSemantic;
-    private boolean componentMaterial;
+    private Boolean componentVisual;
+    private Boolean componentSemantic;
+    private Boolean componentMaterial;
     private String componentMaterials;
     private String duration;
-    private boolean concentration;
-    private boolean ritual;
+    private Boolean concentration;
+    private Boolean ritual;
     private String school;
     private String description;
     private Long sourceId;

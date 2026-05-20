@@ -8,4 +8,8 @@ import org.springframework.stereotype.Repository;
 public interface SpellImageUrlRepository extends JpaRepository<SpellImageUrl, Long> {
     // You can add custom queries here, like:
     // Optional<User> findByEmail(String email);
+
+    /** ADDs */
+    void deleteAllBySpellId(Long spellId);
+
 }

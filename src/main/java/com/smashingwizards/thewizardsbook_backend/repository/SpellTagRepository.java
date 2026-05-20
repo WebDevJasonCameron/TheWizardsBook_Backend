@@ -17,5 +17,7 @@ public interface SpellTagRepository extends JpaRepository<SpellTag, Long> {
     List<SpellTag> findAllByTag_NameContainingIgnoreCase(String name);
 
     List<SpellTag> findAllBySpellId(Long spellId);
+    void deleteAllBySpellId(Long spellId);
+
 
 }

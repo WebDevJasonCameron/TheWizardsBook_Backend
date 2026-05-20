@@ -85,13 +85,13 @@ public class SpellServiceImpl implements SpellService {
         existingSpell.setLevel(spellDTO.getLevel());
         existingSpell.setCastingTime(spellDTO.getCastingTime());
         existingSpell.setRangeArea(spellDTO.getRangeArea());
-        existingSpell.setComponentVisual(spellDTO.isComponentVisual());
-        existingSpell.setComponentSemantic(spellDTO.isComponentSemantic());
-        existingSpell.setComponentMaterial(spellDTO.isComponentMaterial());
+        existingSpell.setComponentVisual(spellDTO.getComponentVisual());
+        existingSpell.setComponentSemantic(spellDTO.getComponentSemantic());
+        existingSpell.setComponentMaterial(spellDTO.getComponentMaterial());
         existingSpell.setComponentMaterials(spellDTO.getComponentMaterials());
         existingSpell.setDuration(spellDTO.getDuration());
-        existingSpell.setConcentration(spellDTO.isConcentration());
-        existingSpell.setRitual(spellDTO.isRitual());
+        existingSpell.setConcentration(spellDTO.getConcentration());
+        existingSpell.setRitual(spellDTO.getRitual());
         existingSpell.setSchool(spellDTO.getSchool());
         existingSpell.setDescription(spellDTO.getDescription());
 
@@ -257,6 +257,7 @@ public class SpellServiceImpl implements SpellService {
                 .toList();
     }
 
+    /** CREATEs */
     @Override
     @Transactional
     public SpellDetailsDTO createSpellWithDetails(CreateSpellRequestDTO createSpellRequestDTO) {
@@ -284,6 +285,76 @@ public class SpellServiceImpl implements SpellService {
         for (Long ttrpgId : createSpellRequestDTO.getTtrpgIds()) {
             Ttrpg ttrpg = ttrpgRepository.getReferenceById(ttrpgId);
             spellTtrpgRepository.save(new SpellTtrpg(savedSpell, ttrpg));
+        }
+
+        return getSpellDetailsById(savedSpell.getId());
+    }
+
+    /** UPDATEs */
+    @Override
+    @Transactional
+    public SpellDetailsDTO updateSpellWithDetails(
+            Long spellId,
+            UpdateSpellRequestDTO request
+    ) {
+
+        Spell existingSpell = spellRepository.findById(spellId)
+                .orElseThrow(() -> new RuntimeException("Spell not found"));
+
+        SpellDTO spellDTO = request.getSpell();
+
+        existingSpell.setName(spellDTO.getName());
+        existingSpell.setLevel(spellDTO.getLevel());
+        existingSpell.setCastingTime(spellDTO.getCastingTime());
+        existingSpell.setRangeArea(spellDTO.getRangeArea());
+        existingSpell.setComponentVisual(spellDTO.getComponentVisual());
+        existingSpell.setComponentSemantic(spellDTO.getComponentSemantic());
+        existingSpell.setComponentMaterial(spellDTO.getComponentMaterial());
+        existingSpell.setComponentMaterials(spellDTO.getComponentMaterials());
+        existingSpell.setDuration(spellDTO.getDuration());
+        existingSpell.setConcentration(spellDTO.getConcentration());
+        existingSpell.setRitual(spellDTO.getRitual());
+        existingSpell.setSchool(spellDTO.getSchool());
+        existingSpell.setDescription(spellDTO.getDescription());
+
+        Spell savedSpell = spellRepository.save(existingSpell);
+
+        // REMOVE OLD RELATIONSHIPS
+        spellClassRepository.deleteAllBySpellId(spellId);
+        spellTagRepository.deleteAllBySpellId(spellId);
+        spellSourceRepository.deleteAllBySpellId(spellId);
+        spellTtrpgRepository.deleteAllBySpellId(spellId);
+
+        // ADD NEW RELATIONSHIPS
+
+        for (Long classId : request.getRpgClassIds()) {
+            RpgClass rpgClass = rpgClassRepository.getReferenceById(classId);
+            spellClassRepository.save(new SpellClass(savedSpell, rpgClass));
+        }
+
+        for (Long tagId : request.getTagIds()) {
+            Tag tag = tagRepository.getReferenceById(tagId);
+            spellTagRepository.save(new SpellTag(savedSpell, tag));
+        }
+
+        for (SourceAssignmentDTO sourceAssignment : request.getSources()) {
+            Source source = sourceRepository.getReferenceById(sourceAssignment.getSourceId());
+
+            spellSourceRepository.save(
+                    new SpellSource(
+                            savedSpell,
+                            source,
+                            sourceAssignment.getPage()
+                    )
+            );
+        }
+
+        for (Long ttrpgId : request.getTtrpgIds()) {
+            Ttrpg ttrpg = ttrpgRepository.getReferenceById(ttrpgId);
+
+            spellTtrpgRepository.save(
+                    new SpellTtrpg(savedSpell, ttrpg)
+            );
         }
 
         return getSpellDetailsById(savedSpell.getId());

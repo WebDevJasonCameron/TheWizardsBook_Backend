@@ -15,5 +15,7 @@ public interface SpellTtrpgRepository extends JpaRepository<SpellTtrpg, Long> {
     List<SpellTtrpg> findAllByTtrpg_NameContainingIgnoreCase(String name);
 
     List<SpellTtrpg> findAllBySpellId(Long spellId);
+    void deleteAllBySpellId(Long spellId);
+
 
 }

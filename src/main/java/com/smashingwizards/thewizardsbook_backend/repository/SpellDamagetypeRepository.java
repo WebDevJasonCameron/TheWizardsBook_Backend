@@ -6,4 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SpellDamagetypeRepository extends JpaRepository<SpellDamagetype, Long> {
+
+    /** ADDs */
+    void deleteAllBySpellId(Long spellId);
+
 }
