@@ -40,13 +40,13 @@ public class SpellMapperTest {
         assertEquals("Test Level", dto.getLevel());
         assertEquals("Test CastingTime", dto.getCastingTime());
         assertEquals("Test Range", dto.getRangeArea());
-        assertFalse(dto.isComponentVisual());
-        assertFalse(dto.isComponentSemantic());
-        assertFalse( dto.isComponentMaterial());
+        assertFalse(dto.getComponentVisual());
+        assertFalse(dto.getComponentSemantic());
+        assertFalse( dto.getComponentMaterial());
         assertEquals("Test Materials", dto.getComponentMaterials());
         assertEquals("Test Duration", dto.getDuration());
-        assertFalse(dto.isConcentration());
-        assertFalse(dto.isRitual());
+        assertFalse(dto.getConcentration());
+        assertFalse(dto.getRitual());
         assertEquals("Test School", dto.getSchool());
         assertEquals("Test Description", dto.getDescription());
     }

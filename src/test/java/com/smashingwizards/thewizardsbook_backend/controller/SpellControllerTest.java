@@ -383,6 +383,95 @@ public class SpellControllerTest {
         verify(spellService).createSpellWithDetails(any(CreateSpellRequestDTO.class));
     }
 
+    @Test
+    @DisplayName("PUT /api/spells/{id}/with-details should update spell with relationships")
+    void updateSpellWithDetails_shouldUpdateSpellWithRelationships() throws Exception {
+        String requestBody = """
+            {
+              "spell": {
+                "name": "Updated Fireball",
+                "level": "3",
+                "castingTime": "1 action",
+                "rangeArea": "150 feet",
+                "componentVisual": true,
+                "componentSemantic": true,
+                "componentMaterial": true,
+                "componentMaterials": "Updated materials",
+                "duration": "Instantaneous",
+                "concentration": false,
+                "ritual": false,
+                "school": "Evocation",
+                "description": "Updated description"
+              },
+              "rpgClassIds": [1, 2],
+              "tagIds": [2, 5],
+              "sources": [
+                {
+                  "sourceId": 1,
+                  "page": "pg. 241"
+                }
+              ],
+              "ttrpgIds": [1]
+            }
+            """;
+
+        SpellDTO spellDTO = new SpellDTO();
+        spellDTO.setId(1L);
+        spellDTO.setName("Updated Fireball");
+        spellDTO.setLevel("3");
+
+        RpgClassDTO wizardDTO = new RpgClassDTO();
+        wizardDTO.setId(1L);
+        wizardDTO.setName("Wizard");
+
+        RpgClassDTO sorcererDTO = new RpgClassDTO();
+        sorcererDTO.setId(2L);
+        sorcererDTO.setName("Sorcerer");
+
+        TagDTO damageDTO = new TagDTO();
+        damageDTO.setId(2L);
+        damageDTO.setName("Damage");
+
+        TagDTO fireDTO = new TagDTO();
+        fireDTO.setId(5L);
+        fireDTO.setName("Fire");
+
+        SourceDTO sourceDTO = new SourceDTO();
+        sourceDTO.setId(1L);
+        sourceDTO.setName("Player Handbook");
+
+        TtrpgDTO ttrpgDTO = new TtrpgDTO();
+        ttrpgDTO.setId(1L);
+        ttrpgDTO.setName("Dungeons & Dragons 5.5");
+
+        SpellDetailsDTO responseDTO = new SpellDetailsDTO();
+        responseDTO.setSpell(spellDTO);
+        responseDTO.setRpgClasses(List.of(wizardDTO, sorcererDTO));
+        responseDTO.setTags(List.of(damageDTO, fireDTO));
+        responseDTO.setSources(List.of(sourceDTO));
+        responseDTO.setTtrpgs(List.of(ttrpgDTO));
+
+        when(spellService.updateSpellWithDetails(eq(1L), any(UpdateSpellRequestDTO.class)))
+                .thenReturn(responseDTO);
+
+        mockMvc.perform(put("/api/spells/1/with-details")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.spell.id").value(1))
+                .andExpect(jsonPath("$.spell.name").value("Updated Fireball"))
+                .andExpect(jsonPath("$.spell.level").value("3"))
+                .andExpect(jsonPath("$.rpgClasses[0].name").value("Wizard"))
+                .andExpect(jsonPath("$.rpgClasses[1].name").value("Sorcerer"))
+                .andExpect(jsonPath("$.tags[0].name").value("Damage"))
+                .andExpect(jsonPath("$.tags[1].name").value("Fire"))
+                .andExpect(jsonPath("$.sources[0].name").value("Player Handbook"))
+                .andExpect(jsonPath("$.ttrpgs[0].name").value("Dungeons & Dragons 5.5"));
+
+        verify(spellService).updateSpellWithDetails(eq(1L), any(UpdateSpellRequestDTO.class));
+    }
+
     /** SUPs */
     private static @NonNull Spell getSpell() {
         Spell spell = new Spell();
